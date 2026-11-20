@@ -1,48 +1,14 @@
 --[[
-	Dex
-	Version 3.5
-	
-	Developed by enesxvc
-]]
+discord.gg/rTw5M8dRXN
+--]]
 
 local selection
 local nodes = {}
 
+local cloneref = cloneref or function(f) return f end;
+
 local oldgame = game
 local game = workspace.Parent
-
-cloneref = cloneref or function(ref)
-	if not getreg then return ref end
-	
-	local InstanceList
-	
-	local a = Instance.new("Part")
-	for _, c in pairs(getreg()) do
-		if type(c) == "table" and #c then
-			if rawget(c, "__mode") == "kvs" then
-				for d, e in pairs(c) do
-					if e == a then
-						InstanceList = c
-						break
-					end
-				end
-			end
-		end
-	end
-	local f = {}
-	function f.invalidate(g)
-		if not InstanceList then
-			return
-		end
-		for b, c in pairs(InstanceList) do
-			if c == g then
-				InstanceList[b] = nil
-				return g
-			end
-		end
-	end
-	return f.invalidate
-end
 
 local EmbeddedModules = {
 ["Console"] = function()
@@ -463,20 +429,33 @@ local function main()
 			local keywords = {
 				lua = {
 					"and", "break", "or", "else", "elseif", "if", "then", "until", "repeat", "while", "do", "for", "in", "end",
-					"local", "return", "function", "export"
+					"local", "return", "function", "export", "const", -- "public", "private"
 				},
 				rbx = {
-					"game", "workspace", "script", "math", "string", "table", "task", "wait", "select", "next", "Enum",
-					"error", "warn", "tick", "assert", "shared", "loadstring", "tonumber", "tostring", "type",
-					"typeof", "unpack", "print", "Instance", "CFrame", "Vector3", "Vector2", "Color3", "UDim", "UDim2", "Ray", "BrickColor",
-					"OverlapParams", "RaycastParams", "Axes", "Random", "Region3", "Rect", "TweenInfo",
-					"collectgarbage", "not", "utf8", "pcall", "xpcall", "_G", "setmetatable", "getmetatable", "os", "pairs", "ipairs"
+					"_G", "_VERSION", "assert", "collectgarbage", "error", "gcinfo", "getfenv", "getmetatable", "ipairs", "loadstring", "newproxy",
+					"next", "pairs", "pcall", "print", "rawequal", "rawget", "rawlen", "rawset", "require", "select", "setfenv",
+					"setmetatable", "tonumber", "tostring", "type", "unpack", "xpcall", "DebuggerManager", "delay", "elapsedTime", "Enum", "game",
+					"plugin", "PluginManager", "printidentity", "script", "settings", "shared", "spawn", "stats", "tick", "time", "typeof",
+					"UserSettings", "version", "wait", "warn", "workspace", "ypcall", "bit32", "buffer", "coroutine", "debug", "math",
+					"os", "string", "table", "task", "utf8", "vector", "Axes", "BrickColor", "CatalogSearchParams", "CFrame", "Color3",
+					"ColorSequence", "ColorSequenceKeypoint", "Content", "DateTime", "DockWidgetPluginGuiInfo", "Faces", "FloatCurveKey", "Font", "Instance", "InstanceHandle", "NumberRange",
+					"NumberSequence", "NumberSequenceKeypoint", "OverlapParams", "Path2DControlPoint", "PathWaypoint", "PhysicalProperties", "Random", "Ray", "RaycastParams", "Rect", "Region3",
+					"Region3int16", "RotationCurveKey", "SecurityCapabilities", "SharedTable", "TweenInfo", "UDim", "UDim2", "User", "ValueCurveKey", "Vector2", "Vector2int16",
+					"Vector3", "Vector3int16", -- "class"
 				},
 				exploit = {
-					"hookmetamethod", "hookfunction", "getgc", "filtergc", "Drawing", "getgenv", "getsenv", "getrenv", "getfenv", "setfenv",
-					"decompile", "saveinstance", "getrawmetatable", "setrawmetatable", "checkcaller", "cloneref", "clonefunction",
-					"iscclosure", "islclosure", "isexecutorclosure", "newcclosure", "getfunctionhash", "crypt", "writefile", "appendfile", "loadfile", "readfile", "listfiles",
-					"makefolder", "isfolder", "isfile", "delfile", "delfolder", "getcustomasset", "fireclickdetector", "firetouchinterest", "fireproximityprompt"
+					"getcustomasset", "setthreadidentity", "isfile", "filtergc", "isfolder", "getcallingscript", "listfiles", "getloadedmodules",
+					"getrunningscripts", "makefolder", "getscriptbytecode", "getscriptclosure", "writefile", "getscriptfromthread", "getscripthash", "cloneref",
+					"getscripts", "compareinstances", "getsenv", "fireclickdetector", "loadstring", "fireproximityprompt", "firetouchinterest", "firesignal",
+					"getcallbackvalue", "getconnections", "gethui", "replicatesignal", "getinstances", "getnilinstances", "getnamecallmethod", "getrawmetatable",
+					"isreadonly", "setrawmetatable", "lz4decompress", "setreadonly", "hookmetamethod", "isexecutorclosure", "checkcaller", "iscclosure",
+					"cleardrawcache", "clonefunction", "identifyexecutor", "islclosure", "getrenderproperty", "getfunctionhash", "restorefunction", "newcclosure",
+					"isrenderobj", "hookfunction", "base64decode", "lz4compress", "getrenv", "request", "base64encode", "readfile",
+					"getthreadidentity", "getgenv", "appendfile", "isscriptable", "gethiddenproperty", "setrenderproperty", "delfile", "sethiddenproperty",
+					"loadfile", "getreg", "delfolder", "setscriptable", "getgc", "Drawing", "WebSocket", "setclipboard",
+					"oth", "setstackhidden", "cache", "raknet", "getbspval", "getpcd", "gethwid", "decompile",
+					"saveinstance", "setfpscap", "zstdcompress", "zstddecompress", "create_comm_channel", "get_comm_channel", "getactors", "getactorthreads",
+					"getdeletedactors", "is_parallel", "run_on_actor", "run_on_thread"
 				},
 				operators = {
 					"#", "+", "-", "*", "%", "/", "^", "=", "~", "=", "<", ">", ",", ".", "(", ")", "{", "}", "[", "]", ";", ":"
@@ -683,20 +662,20 @@ local function main()
 		end)
 
 		local IsHoldingCTRL = false
-		UserInputService.InputBegan:Connect(function(input, gameproc)
+		Main.TrackConnection(UserInputService.InputBegan:Connect(function(input, gameproc)
 			if not gameproc then
 				if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then
 					IsHoldingCTRL = true
 				end
 			end
-		end)
-		UserInputService.InputEnded:Connect(function(input, gameproc)
+		end))
+		Main.TrackConnection(UserInputService.InputEnded:Connect(function(input, gameproc)
 			if not gameproc then
 				if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then
 					IsHoldingCTRL = false
 				end
 			end
-		end)
+		end))
 
 		if AutoScroll == true then
 			Console.AutoScroll.BackgroundColor3 = Color3.fromRGB(11, 90, 175)
@@ -731,7 +710,7 @@ local function main()
 
 		local scrollConsoleInput
 		Console.Output.MouseEnter:Connect(function()
-			scrollConsoleInput = UserInputService.InputChanged:Connect(function(input)
+			scrollConsoleInput = Main.TrackConnection(UserInputService.InputChanged:Connect(function(input)
 				if CtrlScroll and input.UserInputType == Enum.UserInputType.MouseWheel and IsHoldingCTRL == true then
 					Console.Output.ScrollingEnabled = false
 					local newTextSize = OutputTextSize.Value + input.Position.Z
@@ -741,11 +720,11 @@ local function main()
 				else
 					Console.Output.ScrollingEnabled = true
 				end
-			end)
+			end))
 		end)
 		Console.Output.MouseLeave:Connect(function()
 			if scrollConsoleInput then
-				scrollConsoleInput:Disconnect()
+				Main.DisconnectConnection(scrollConsoleInput)
 				scrollConsoleInput = nil
 			end
 		end)
@@ -761,7 +740,7 @@ local function main()
 
 		local focussedOutput
 
-		LogService.MessageOut:Connect(function(msg, msgtype)
+		Main.TrackConnection(LogService.MessageOut:Connect(function(msg, msgtype)
 			local formattedText = ""
 			local unformattedText = ""
 			local newOutputText = Console.OutputTemplate:Clone()
@@ -809,7 +788,7 @@ local function main()
 			if AutoScroll then
 				Console.Output.CanvasPosition = Vector2.new(0, 9e9)
 			end
-		end)
+		end))
 
 		Console.Output.MouseLeave:Connect(function()
 			if focussedOutput then
@@ -824,8 +803,6 @@ local function main()
 
 			Console.CommandLine.ScrollingFrame.Highlight.Text = SyntaxHighlightingModule.run(Console.CommandLine.ScrollingFrame.TextBox.Text)
 		end)
-
-
 
 		Console.CommandLine.ScrollingFrame.TextBox.FocusLost:Connect(function(enterPressed)
 			if enterPressed and Console.CommandLine.ScrollingFrame.TextBox.Text ~= "" then
@@ -1343,16 +1320,16 @@ local function main()
 		local input = service.UserInputService
 		local mouseEvent,releaseEvent
 
-		mouseEvent = input.InputChanged:Connect(function(input)
+		mouseEvent = Main.TrackConnection(input.InputChanged:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 				move()
 			end
-		end)
+		end))
 
-		releaseEvent = input.InputEnded:Connect(function(input)
+		releaseEvent = Main.TrackConnection(input.InputEnded:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-				releaseEvent:Disconnect()
-				mouseEvent:Disconnect()
+				Main.DisconnectConnection(releaseEvent)
+				Main.DisconnectConnection(mouseEvent)
 				newGui:Destroy()
 				dragOutline:Destroy()
 				Explorer.Dragging = false
@@ -1374,7 +1351,7 @@ local function main()
 					end
 				end
 			end
-		end)
+		end))
 	end
 
 	Explorer.NewListEntry = function(index)
@@ -1425,14 +1402,14 @@ local function main()
 				local listOffsetX = startX - treeFrame.AbsolutePosition.X
 				local listOffsetY = startY - treeFrame.AbsolutePosition.Y
 
-				releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+				releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-						releaseEvent:Disconnect()
-						mouseEvent:Disconnect()
+						Main.DisconnectConnection(releaseEvent)
+						Main.DisconnectConnection(mouseEvent)
 					end
-				end)
+				end))
 
-				mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+				mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 						local currentX, currentY
 
@@ -1449,13 +1426,13 @@ local function main()
 						local dist = math.sqrt(deltaX^2 + deltaY^2)
 
 						if dist > 5 then
-							releaseEvent:Disconnect()
-							mouseEvent:Disconnect()
+							Main.DisconnectConnection(releaseEvent)
+							Main.DisconnectConnection(mouseEvent)
 							isRenaming = false
 							Explorer.StartDrag(listOffsetX, listOffsetY)
 						end
 					end
-				end)
+				end))
 			end
 		end)
 
@@ -1619,32 +1596,32 @@ local function main()
 	end
 
 	Explorer.SetupConnections = function()
-		if descendantAddedCon then descendantAddedCon:Disconnect() end
-		if descendantRemovingCon then descendantRemovingCon:Disconnect() end
-		if itemChangedCon then itemChangedCon:Disconnect() end
+		if descendantAddedCon then Main.DisconnectConnection(descendantAddedCon) end
+		if descendantRemovingCon then Main.DisconnectConnection(descendantRemovingCon) end
+		if itemChangedCon then Main.DisconnectConnection(itemChangedCon) end
 
 		if Main.Elevated then
-			descendantAddedCon = game.DescendantAdded:Connect(addObject)
-			descendantRemovingCon = game.DescendantRemoving:Connect(removeObject)
+			descendantAddedCon = Main.TrackConnection(game.DescendantAdded:Connect(addObject))
+			descendantRemovingCon = Main.TrackConnection(game.DescendantRemoving:Connect(removeObject))
 		else
-			descendantAddedCon = game.DescendantAdded:Connect(function(obj) pcall(addObject,obj) end)
-			descendantRemovingCon = game.DescendantRemoving:Connect(function(obj) pcall(removeObject,obj) end)
+			descendantAddedCon = Main.TrackConnection(game.DescendantAdded:Connect(function(obj) pcall(addObject,obj) end))
+			descendantRemovingCon = Main.TrackConnection(game.DescendantRemoving:Connect(function(obj) pcall(removeObject,obj) end))
 		end
 
 		if Settings.Explorer.UseNameWidth then
-			itemChangedCon = game.ItemChanged:Connect(function(obj,prop)
+			itemChangedCon = Main.TrackConnection(game.ItemChanged:Connect(function(obj,prop)
 				if prop == "Parent" and nodes[obj] then
 					moveObject(obj)
 				elseif prop == "Name" and nodes[obj] then
 					nodes[obj].NameWidth = nil
 				end
-			end)
+			end))
 		else
-			itemChangedCon = game.ItemChanged:Connect(function(obj,prop)
+			itemChangedCon = Main.TrackConnection(game.ItemChanged:Connect(function(obj,prop)
 				if prop == "Parent" and nodes[obj] then
 					moveObject(obj)
 				end
-			end)
+			end))
 		end
 	end
 
@@ -1762,9 +1739,6 @@ local function main()
 			context:AddRegistered("TELEPORT_TO")
 			context:AddRegistered("VIEW_OBJECT")
 			context:AddRegistered("3DVIEW_MODEL")
-		end
-		if presentClasses["Animation"] then
-			context:AddRegistered("3DVIEW_ANIMATION")
 		end
 		if presentClasses["Tween"] then context:AddRegistered("PLAY_TWEEN") end
 		if presentClasses["Animation"] then
@@ -2034,7 +2008,7 @@ local function main()
 					if Obj.CanCollide then
 						plr.Character:MoveTo(Obj.Position)
 					else
-						plrRP.CFrame = CFrame.new(Obj.Position + Settings.Explorer.TeleportToOffset)
+						plrRP.CFrame = CFrame.new(Obj.Position)
 					end
 					break
 				elseif Obj:IsA("Model") then
@@ -2042,7 +2016,7 @@ local function main()
 						if Obj.PrimaryPart.CanCollide then
 							plr.Character:MoveTo(Obj.PrimaryPart.Position)
 						else
-							plrRP.CFrame = CFrame.new(Obj.PrimaryPart.Position + Settings.Explorer.TeleportToOffset)
+							plrRP.CFrame = CFrame.new(Obj.PrimaryPart.Position)
 						end
 						break
 					else
@@ -2051,7 +2025,7 @@ local function main()
 							if part.CanCollide then
 								plr.Character:MoveTo(part.Position)
 							else
-								plrRP.CFrame = CFrame.new(part.Position + Settings.Explorer.TeleportToOffset)
+								plrRP.CFrame = CFrame.new(part.Position)
 							end
 							break
 						elseif Obj.WorldPivot then
@@ -2295,17 +2269,6 @@ local function main()
 				if isa(sList[1].Obj,"BasePart") or isa(sList[1].Obj,"Model") then
 					ModelViewer.ViewModel(sList[1].Obj)
 					return
-				end
-			end
-		end})
-
-		context:Register("3DVIEW_ANIMATION",{Name = "3D Preview Animation", IconMap = Explorer.LegacyClassIcons, Icon = 54, OnClick = function()
-			local sList = selection.List
-
-			if #sList == 1 then
-				local obj = sList[1].Obj
-				if obj:IsA("Animation") then
-					ModelViewer.ViewAnimation(obj)
 				end
 			end
 		end})
@@ -2976,89 +2939,79 @@ return search]==]
 		return func(),specFilterList
 	end
 
-Explorer._SearchFilters = {} do
-	local Filters = Explorer._SearchFilters
+	Explorer.DoSearch = function(query)
+		table.clear(Explorer.SearchExpanded)
+		table.clear(searchResults)
+		expanded = (#query == 0 and Explorer.Expanded or Explorer.SearchExpanded)
+		searchFunc = nil
 
-	local function NewFilter(list, func)
-		for _,v in next, list do
-			Filters[v:lower() .. ":"] = func
-		end
-	end
+		if #query > 0 then	
+			local expandTable = Explorer.SearchExpanded
+			local specFilters
 
-	local Only = {
-		remotes = {"RemoteEvent", "RemoteFunction", "BindableEvent", "BindableFunction"},
-		scripts = {"Script", "LocalScript", "ModuleScript"},
-		players = {"Player"}
-	}
+			local lower = string.lower
+			local find = string.find
+			local tostring = tostring
 
-	NewFilter({"parent", "p"}, function(Obj, str) return Obj.Parent and (Obj.Parent.Name:lower()):find(str) end)
-	NewFilter({"class", "c"}, function(Obj, str) return (Obj.ClassName:lower()):find(str) end)
-	NewFilter({"isa", "i"}, function(Obj, str) return Obj:IsA(str) end)
+			local lowerQuery = lower(query)
 
-	NewFilter({"only", "o"}, function(Obj, str)
-		local Special = Only[str]
-		return Special and table.find(Special, Obj.ClassName)
-	end)
-end
+			local function defaultSearch(root)
+				local expandedpar = false
+				for i = 1,#root do
+					local node = root[i]
+					local obj = node.Obj
 
-Explorer.DoSearch = function(query)
-	table.clear(Explorer.SearchExpanded)
-	table.clear(searchResults)
-	expanded = (#query == 0 and Explorer.Expanded) or Explorer.SearchExpanded
-
-	local tostr = tostring;
-	local tfind = table.find;
-
-	local Filters = Explorer._SearchFilters
-	local expandTable = Explorer.SearchExpanded
-
-	local allnodes = nodes[game]
-
-	local defaultSearch = (function(Obj, str) return (Obj.Name:lower()):find(str, 1, true) end)
-
-	local function searchTable(root, str, func)
-		local expandedpar = false
-		for _,node in ipairs(root) do
-			if func(node.Obj, str) then
-				expandTable[node] = 0
-				searchResults[node] = true
-				if not expandedpar then
-					local parnode = node.Parent
-					while parnode and (not searchResults[parnode] or expandTable[parnode] == 0) do
-						expanded[parnode] = true
-						searchResults[parnode] = true
-						parnode = parnode.Parent
+					if find(lower(tostring(obj)),lowerQuery,1,true) then
+						expandTable[node] = 0
+						searchResults[node] = true
+						if not expandedpar then
+							local parnode = node.Parent
+							while parnode and (not searchResults[parnode] or expandTable[parnode] == 0) do
+								expanded[parnode] = true
+								searchResults[parnode] = true
+								parnode = parnode.Parent
+							end
+							expandedpar = true
+						end
 					end
-					expandedpar = true
+
+					if #node > 0 then defaultSearch(node) end
 				end
 			end
 
-			if #node > 0 then searchTable(node, str, func) end
+			if Main.Elevated then
+				local start = tick()
+				searchFunc,specFilters = Explorer.BuildSearchFunc(query)
+				--print("BUILD SEARCH",tick()-start)
+			else
+				searchFunc = defaultSearch
+			end
+
+			if specFilters then
+				table.clear(specResults)
+				for i = 1,#specFilters do -- Specific search filers that returns list of matches
+					local resMap = {}
+					specResults[i] = resMap
+					local objs = specFilters[i]()
+					for c = 1,#objs do
+						local node = nodes[objs[c]]
+						if node then
+							resMap[node] = true
+						end
+					end
+				end
+			end
+
+			if searchFunc then
+				local start = tick()
+				searchFunc(nodes[game])
+				searchFunc(nilNode)
+				--warn(tick()-start)
+			end
 		end
+
+		Explorer.ForceUpdate()
 	end
-
-	local function Search(query)
-		if query:len() == 0 then return end
-
-		local lower = query:lower()
-		local split = lower:split(":")
-		local Filter = (Filters[split[1] .. ":"]) or nil
-
-		if Filter then
-			searchTable(allnodes, (split[2] or ""), Filter)
-		else
-			searchTable(allnodes, (lower or ""), defaultSearch)
-		end
-	end
-
-	for _,v in ipairs(query:split(",")) do
-		if v:len() > 0 then
-			Search(v)
-		end
-	end
-
-	Explorer.ForceUpdate()
-end
 
 	Explorer.ClearSearch = function()
 		Explorer.GuiElems.SearchBar.Text = ""
@@ -3083,7 +3036,7 @@ end
 			{2,"Frame",{BackgroundColor3=Color3.new(0.04313725605607,0.35294118523598,0.68627452850342),BackgroundTransparency=1,BorderColor3=Color3.new(0.33725491166115,0.49019610881805,0.73725491762161),BorderSizePixel=0,Name="Indent",Parent={1},Position=UDim2.new(0,20,0,0),Size=UDim2.new(1,-20,1,0),}},
 			{3,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="EntryName",Parent={2},Position=UDim2.new(0,26,0,0),Size=UDim2.new(1,-26,1,0),Text="Workspace",TextColor3=Color3.new(0.86274516582489,0.86274516582489,0.86274516582489),TextSize=14,TextXAlignment=0,}},
 			{4,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ClipsDescendants=true,Font=3,Name="Expand",Parent={2},Position=UDim2.new(0,-20,0,0),Size=UDim2.new(0,20,0,20),Text="",TextSize=14,}},
-			{5,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5642383285",ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={4},Position=UDim2.new(0,2,0,2),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
+			{5,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("Test_Icons.png","rbxassetid://5642383285"),ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={4},Position=UDim2.new(0,2,0,2),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
 			{6,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ImageRectOffset=Vector2.new(304,0),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={2},Position=UDim2.new(0,4,0,2),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
 		})
 
@@ -3352,9 +3305,9 @@ end
 			{5,"UICorner",{CornerRadius=UDim.new(0,2),Parent={3},}},
 			{6,"UIStroke",{Thickness=1.4,Parent={3},Color=Color3.fromRGB(42,42,42)}},
 			{7,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Reset",Parent={3},Position=UDim2.new(1,-17,0,1),Size=UDim2.new(0,16,0,16),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{8,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5034718129",ImageColor3=Color3.new(0.39215686917305,0.39215686917305,0.39215686917305),Parent={7},Size=UDim2.new(0,16,0,16),}},
+			{8,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("search2.png","rbxassetid://5034718129"),ImageColor3=Color3.new(0.39215686917305,0.39215686917305,0.39215686917305),Parent={7},Size=UDim2.new(0,16,0,16),}},
 			{9,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Refresh",Parent={2},Position=UDim2.new(1,-20,0,1),Size=UDim2.new(0,18,0,18),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,Visible=false,}},
-			{10,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5642310344",Parent={9},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,12,0,12),}},
+			{10,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("refresh-icon3.png","rbxassetid://5642310344"),Parent={9},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,12,0,12),}},
 			{11,"Frame",{BackgroundColor3=Color3.new(0.15686275064945,0.15686275064945,0.15686275064945),BorderSizePixel=0,Name="ScrollCorner",Parent={1},Position=UDim2.new(1,-16,1,-16),Size=UDim2.new(0,16,0,16),Visible=false,}},
 			{12,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ClipsDescendants=true,Name="List",Parent={1},Position=UDim2.new(0,0,0,23),Size=UDim2.new(1,0,1,-23),}}
 		})
@@ -5941,16 +5894,16 @@ local function main()
 
 						self.Resizing = resizer
 						
-						releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+						releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-								releaseEvent:Disconnect()
-								if mouseEvent then mouseEvent:Disconnect() end
+								Main.DisconnectConnection(releaseEvent)
+								if mouseEvent then Main.DisconnectConnection(mouseEvent) end
 								self.Resizing = false
 								resizer.BackgroundTransparency = 1
 							end
-						end)
+						end))
 
-						mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+						mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 							if self.Resizable and self.ResizableInternal and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 								self:StopTweens()
 								local deltaX = input.Position.X - resizer.AbsolutePosition.X - offX
@@ -5965,7 +5918,7 @@ local function main()
 								self.SizeY = self.SizeY + (isV and deltaY * signY or 0)
 								guiMain.Size = UDim2.new(0, self.SizeX, 0, self.Minimized and 20 or self.SizeY)
 							end
-						end)
+						end))
 					end
 				end
 			end)
@@ -6039,13 +5992,13 @@ local function main()
 				{5,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.20392157137394,0.20392157137394,0.20392157137394),BorderSizePixel=0,Name="TopBar",Parent={2},Size=UDim2.new(1,0,0,20),Text = ""}},
 				{6,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Title",Parent={5},Position=UDim2.new(0,5,0,0),Size=UDim2.new(1,-10,0,20),Text="Window",TextColor3=Color3.new(1,1,1),TextSize=14,TextXAlignment=0}},
 				{7,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Close",Parent={5},Position=UDim2.new(1,-18,0,2),Size=UDim2.new(0,16,0,16),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-				{8,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5054663650",Parent={7},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,10,0,10),}},
+				{8,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("close3.png","rbxassetid://5054663650"),Parent={7},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,10,0,10),}},
 				{9,"UICorner",{CornerRadius=UDim.new(0,4),Parent={7},}},
 				--[[lol mod]]	{9,"UICorner",{CornerRadius=UDim.new(0,4),Parent={2},}},
 				{10,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Minimize",Parent={5},Position=UDim2.new(1,-36,0,2),Size=UDim2.new(0,16,0,16),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-				{11,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5034768003",Parent={10},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,10,0,10),}},
+				{11,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("minimize2.png","rbxassetid://5034768003"),Parent={10},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,10,0,10),}},
 				{12,"UICorner",{CornerRadius=UDim.new(0,4),Parent={10},}},
-				{13,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image="rbxassetid://1427967925",Name="Outlines",Parent={2},Position=UDim2.new(0,-5,0,-5),ScaleType=1,Size=UDim2.new(1,10,1,10),SliceCenter=Rect.new(6,6,25,25),TileSize=UDim2.new(0,20,0,20),}},
+				{13,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image=Main.GetAssetId("borders.png","rbxassetid://1427967925"),Name="Outlines",Parent={2},Position=UDim2.new(0,-5,0,-5),ScaleType=1,Size=UDim2.new(1,10,1,10),SliceCenter=Rect.new(6,6,25,25),TileSize=UDim2.new(0,20,0,20),}},
 				{14,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Name="ResizeControls",Parent={2},Position=UDim2.new(0,-5,0,-5),Size=UDim2.new(1,10,1,10),}},
 				{15,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.27450981736183,0.27450981736183,0.27450981736183),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="North",Parent={14},Position=UDim2.new(0,5,0,0),Size=UDim2.new(1,-10,0,5),Text="",TextColor3=Color3.new(0,0,0),TextSize=14,}},
 				{16,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.27450981736183,0.27450981736183,0.27450981736183),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="South",Parent={14},Position=UDim2.new(0,5,1,-5),Size=UDim2.new(1,-10,0,5),Text="",TextColor3=Color3.new(0,0,0),TextSize=14,}},
@@ -6107,10 +6060,10 @@ local function main()
 
 						guiDragging = true
 
-						releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+						releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-								releaseEvent:Disconnect()
-								if mouseEvent then mouseEvent:Disconnect() end
+								Main.DisconnectConnection(releaseEvent)
+								if mouseEvent then Main.DisconnectConnection(mouseEvent) end
 								guiDragging = false
 								alignIndicator.Parent = nil
 								if alignInsertSide then
@@ -6118,9 +6071,9 @@ local function main()
 									self:AlignTo(targetSide, alignInsertPos)
 								end
 							end
-						end)
+						end))
 
-						mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+						mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 							if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and self.Draggable and not self.Closed and ButtonDown then
 								if self.Aligned then
 									if leftSide.Resizing or rightSide.Resizing then return end
@@ -6163,7 +6116,7 @@ local function main()
 									alignInsertSide = nil
 								end
 							end
-						end)
+						end))
 					end
 				end
 			end)
@@ -6314,19 +6267,19 @@ local function main()
 						side.Resizing = resizer
 						resizer.BackgroundColor3 = theme.MainColor2
 
-						releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+						releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 							if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-								releaseEvent:Disconnect()
-								mouseEvent:Disconnect()
+								Main.DisconnectConnection(releaseEvent)
+								Main.DisconnectConnection(mouseEvent)
 								side.Resizing = false
 								resizer.BackgroundColor3 = theme.Button
 							end
-						end)
+						end))
 
-						mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+						mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 							if not resizer.Parent then
-								releaseEvent:Disconnect()
-								mouseEvent:Disconnect()
+								Main.DisconnectConnection(releaseEvent)
+								Main.DisconnectConnection(mouseEvent)
 								side.Resizing = false
 								return
 							end
@@ -6381,7 +6334,7 @@ local function main()
 									sideResized(otherSide)
 								end
 							end
-						end)
+						end))
 					end
 				end
 			end)
@@ -6510,7 +6463,7 @@ local function main()
 					self.GuiElems.Main:TweenPosition(newPos,Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.25,true)
 					self.GuiElems.Main:TweenSize(UDim2.new(0,self.SizeX,0,newVal and 20 or self.SizeY),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.25,true)
 				end
-				self.GuiElems.Minimize.ImageLabel.Image = newVal and "rbxassetid://5060023708" or "rbxassetid://5034768003"
+				self.GuiElems.Minimize.ImageLabel.Image = newVal and Main.GetAssetId("arrow3.png","rbxassetid://5060023708") or Main.GetAssetId("minimize2.png","rbxassetid://5034768003")
 			end
 
 			if oldVal ~= newVal then
@@ -6553,13 +6506,13 @@ local function main()
 				for i,v in pairs(leftSide.Windows) do if v == self then table.remove(leftSide.Windows,i) break end end
 				for i,v in pairs(rightSide.Windows) do if v == self then table.remove(rightSide.Windows,i) break end end
 				if not table.find(visibleWindows,self) then table.insert(visibleWindows,1,self) end
-				self.GuiElems.Minimize.ImageLabel.Image = "rbxassetid://5034768003"
+				self.GuiElems.Minimize.ImageLabel.Image = Main.GetAssetId("minimize2.png","rbxassetid://5034768003")
 				self.Side = nil
 				updateWindows()
 			else
 				self:SetMinimized(false,3)
 				for i,v in pairs(visibleWindows) do if v == self then table.remove(visibleWindows,i) break end end
-				self.GuiElems.Minimize.ImageLabel.Image = "rbxassetid://5448127505"
+				self.GuiElems.Minimize.ImageLabel.Image = Main.GetAssetId("squares_icon2.png","rbxassetid://5448127505")
 			end
 		end
 
@@ -6750,7 +6703,7 @@ local function main()
 			window.GuiElems.Close.ImageLabel.ImageTransparency = 0
 			window.GuiElems.TopBar.BackgroundTransparency = 0
 			window.GuiElems.Outlines.ImageTransparency = 0
-			window.GuiElems.Minimize.ImageLabel.Image = "rbxassetid://5034768003"
+			window.GuiElems.Minimize.ImageLabel.Image = Main.GetAssetId("minimize2.png","rbxassetid://5034768003")
 			window.GuiElems.Main.Active = true
 			window.GuiElems.Main.Outlines.Visible = true
 			window:SetMinimized(false,3)
@@ -7216,17 +7169,18 @@ local function main()
 
 			-- Close event
 			local closable
-			if self.CloseEvent then self.CloseEvent:Disconnect() end
-			self.CloseEvent = service.UserInputService.InputBegan:Connect(function(input)
+			if self.CloseEvent then Main.DisconnectConnection(self.CloseEvent) end
+			self.CloseEvent = Main.TrackConnection(service.UserInputService.InputBegan:Connect(function(input)
 				if not closable then return end
 
 				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 					if not Lib.CheckMouseInGui(elems.Main) then
-						self.CloseEvent:Disconnect()
+						Main.DisconnectConnection(self.CloseEvent)
+						self.CloseEvent = nil
 						self:Hide()
 					end
 				end
-			end)
+			end))
 
 			-- Resize
 			if reverseY then
@@ -7245,6 +7199,10 @@ local function main()
 		end
 
 		funcs.Hide = function(self)
+			if self.CloseEvent then
+				Main.DisconnectConnection(self.CloseEvent)
+				self.CloseEvent = nil
+			end
 			self.Gui.Parent = nil
 		end
 
@@ -7341,27 +7299,19 @@ local function main()
 			["true"] = true,
 			["until"] = true,
 			["while"] = true,
-			["plugin"] = true
+			["plugin"] = true,
+			["const"] = true,
+			["export"] = true
 		}
-
+		
 		local builtIns = {
-			["delay"] = true,
-			["elapsedTime"] = true,
-			["require"] = true,
-			["spawn"] = true,
-			["tick"] = true,
-			["time"] = true,
-			["typeof"] = true,
-			["UserSettings"] = true,
-			["wait"] = true,
-			["warn"] = true,
-			["game"] = true,
-			["shared"] = true,
-			["script"] = true,
-			["workspace"] = true,
+			--// Luau Globals
+			["_G"] = true,
+			["_VERSION"] = true,
 			["assert"] = true,
 			["collectgarbage"] = true,
 			["error"] = true,
+			["gcinfo"] = true,
 			["getfenv"] = true,
 			["getmetatable"] = true,
 			["ipairs"] = true,
@@ -7373,7 +7323,9 @@ local function main()
 			["print"] = true,
 			["rawequal"] = true,
 			["rawget"] = true,
+			["rawlen"] = true,
 			["rawset"] = true,
+			["require"] = true,
 			["select"] = true,
 			["setfenv"] = true,
 			["setmetatable"] = true,
@@ -7382,80 +7334,187 @@ local function main()
 			["type"] = true,
 			["unpack"] = true,
 			["xpcall"] = true,
-			["_G"] = true,
-			["_VERSION"] = true,
+			
+			--// Roblox Globals
+			["DebuggerManager"] = true,
+			["delay"] = true,
+			["elapsedTime"] = true,
+			["Enum"] = true,
+			["game"] = true,
+			["plugin"] = true,
+			["PluginManager"] = true,
+			["printidentity"] = true,
+			["script"] = true,
+			["settings"] = true,
+			["shared"] = true,
+			["spawn"] = true,
+			["stats"] = true,
+			["tick"] = true,
+			["time"] = true,
+			["typeof"] = true,
+			["UserSettings"] = true,
+			["version"] = true,
+			["wait"] = true,
+			["warn"] = true,
+			["workspace"] = true,
+			["ypcall"] = true,
+			
+			--// Libraries
+			["bit32"] = true,
+			["buffer"] = true,
 			["coroutine"] = true,
 			["debug"] = true,
 			["math"] = true,
 			["os"] = true,
 			["string"] = true,
 			["table"] = true,
-			["bit32"] = true,
+			["task"] = true,
 			["utf8"] = true,
+			["vector"] = true,
+			-- ["class"] = true, --// coming soon
+			
+			--// Datatypes
 			["Axes"] = true,
 			["BrickColor"] = true,
+			["CatalogSearchParams"] = true,
 			["CFrame"] = true,
 			["Color3"] = true,
 			["ColorSequence"] = true,
 			["ColorSequenceKeypoint"] = true,
+			["Content"] = true,
+			["DateTime"] = true,
 			["DockWidgetPluginGuiInfo"] = true,
-			["Enum"] = true,
 			["Faces"] = true,
+			["FloatCurveKey"] = true,
+			["Font"] = true,
 			["Instance"] = true,
+			["InstanceHandle"] = true,
 			["NumberRange"] = true,
 			["NumberSequence"] = true,
 			["NumberSequenceKeypoint"] = true,
+			["OverlapParams"] = true,
+			["Path2DControlPoint"] = true,
 			["PathWaypoint"] = true,
 			["PhysicalProperties"] = true,
 			["Random"] = true,
 			["Ray"] = true,
+			["RaycastParams"] = true,
 			["Rect"] = true,
 			["Region3"] = true,
 			["Region3int16"] = true,
+			["RotationCurveKey"] = true,
+			["SecurityCapabilities"] = true,
+			["SharedTable"] = true,
 			["TweenInfo"] = true,
 			["UDim"] = true,
 			["UDim2"] = true,
+			["User"] = true,
+			["ValueCurveKey"] = true,
 			["Vector2"] = true,
 			["Vector2int16"] = true,
 			["Vector3"] = true,
 			["Vector3int16"] = true,
-
-			["getgenv"] = true,
-			["getrenv"] = true,
-			["getsenv"] = true,
-			["getgc"] = true,
-			["getreg"] = true,
+			
+			--// Luau Exploits Globals
+			--// SUNC
+			["getcustomasset"] = true,
+			["setthreadidentity"] = true,
+			["isfile"] = true,
 			["filtergc"] = true,
-			["saveinstave"] = true,
-			["decompile"] = true,
-			["syn"] = true,
-			["getupvalue"] = true,
-			["getupvalues"] = true,
-			["setupvalue"] = true,
-			["getstack"] = true,
-			["setstack"] = true,
-			["getconstants"] = true,
-			["getconstant"] = true,
-			["setconstant"] = true,
-			["getproto"] = true,
-			["getprotos"] = true,
-			["checkcaller"] = true,
-			["clonefunction"] = true,
+			["isfolder"] = true,
+			["getcallingscript"] = true,
+			["listfiles"] = true,
+			["getloadedmodules"] = true,
+			["getrunningscripts"] = true,
+			["makefolder"] = true,
+			["getscriptbytecode"] = true,
+			["getscriptclosure"] = true,
+			["writefile"] = true,
+			["getscriptfromthread"] = true,
+			["getscripthash"] = true,
 			["cloneref"] = true,
-			["getfunctionhash"] = true,
-			["gethwid"] = true,
-			["hookfunction"] = true,
+			["getscripts"] = true,
+			["compareinstances"] = true,
+			["getsenv"] = true,
+			["fireclickdetector"] = true,
+			["loadstring"] = true,
+			["fireproximityprompt"] = true,
+			["firetouchinterest"] = true,
+			["firesignal"] = true,
+			["getcallbackvalue"] = true,
+			["getconnections"] = true,
+			["gethui"] = true,
+			["replicatesignal"] = true,
+			["getinstances"] = true,
+			["getnilinstances"] = true,
+			["getnamecallmethod"] = true,
+			["getrawmetatable"] = true,
+			["isreadonly"] = true,
+			["setrawmetatable"] = true,
+			["lz4decompress"] = true,
+			["setreadonly"] = true,
 			["hookmetamethod"] = true,
-			["iscclosure"] = true,
-			["islclosure"] = true,
-			["newcclosure"] = true,
 			["isexecutorclosure"] = true,
+			["checkcaller"] = true,
+			["iscclosure"] = true,
+			["cleardrawcache"] = true,
+			["clonefunction"] = true,
+			["identifyexecutor"] = true,
+			["islclosure"] = true,
+			["getrenderproperty"] = true,
+			["getfunctionhash"] = true,
 			["restorefunction"] = true,
-			["crypt"] = true,
+			["newcclosure"] = true,
+			["isrenderobj"] = true,
+			["hookfunction"] = true,
+			["base64decode"] = true,
+			["lz4compress"] = true,
+			["getrenv"] = true,
+			["request"] = true,
+			["base64encode"] = true,
+			["readfile"] = true,
+			["getthreadidentity"] = true,
+			["getgenv"] = true,
+			["appendfile"] = true,
+			["isscriptable"] = true,
+			["gethiddenproperty"] = true,
+			["setrenderproperty"] = true,
+			["delfile"] = true,
+			["sethiddenproperty"] = true,
+			["loadfile"] = true,
+			["getreg"] = true,
+			["delfolder"] = true,
+			["setscriptable"] = true,
+			["getgc"] = true,
 			["Drawing"] = true,
-
+			["WebSocket"] = true,
+			["setclipboard"] = true,
+			
+			--// are not in SUNC (yet or never) but still used
+			["oth"] = true,
+			["setstackhidden"] = true,
+			["cache"] = true,
+			["raknet"] = true,
+			["getbspval"] = true,
+			["getpcd"] = true,
+			["gethwid"] = true,
+			["decompile"] = true,
+			["saveinstance"] = true,
+			["setfpscap"] = true,
+			["zstdcompress"] = true,
+			["zstddecompress"] = true,
+			
+			--// Actors
+			["create_comm_channel"] = true,
+			["get_comm_channel"] = true,
+			["getactors"] = true,
+			["getactorthreads"] = true,
+			["getdeletedactors"] = true,
+			["is_parallel"] = true,
+			["run_on_actor"] = true,
+			["run_on_thread"] = true,
 		}
-
+		
 		local builtInInited = false
 
 		local richReplace = {
@@ -7569,17 +7628,17 @@ local function main()
 						obj:Refresh()
 					end
 
-					releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+					releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-							releaseEvent:Disconnect()
-							mouseEvent:Disconnect()
-							scrollEvent:Disconnect()
+							Main.DisconnectConnection(releaseEvent)
+							Main.DisconnectConnection(mouseEvent)
+							Main.DisconnectConnection(scrollEvent)
 							obj:SetCopyableSelection()
 							--updateSelection()
 						end
-					end)
+					end))
 
-					mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+					mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 							local upDelta = mouse.Y - codeFrame.AbsolutePosition.Y
 							local downDelta = mouse.Y - codeFrame.AbsolutePosition.Y - codeFrame.AbsoluteSize.Y
@@ -7599,14 +7658,14 @@ local function main()
 							end
 							updateSelection()
 						end
-					end)
+					end))
 
-					scrollEvent = game:GetService("RunService").RenderStepped:Connect(function()
+					scrollEvent = Main.TrackConnection(game:GetService("RunService").RenderStepped:Connect(function()
 						if scrollPowerV ~= 0 or scrollPowerH ~= 0 then
 							obj:ScrollDelta(scrollPowerH,scrollPowerV)
 							updateSelection()
 						end
-					end)
+					end))
 
 					obj:Refresh()
 				end
@@ -7718,10 +7777,10 @@ local function main()
 
 		funcs.ConnectEditBoxEvent = function(self)
 			if self.EditBoxEvent then
-				self.EditBoxEvent:Disconnect()
+				Main.DisconnectConnection(self.EditBoxEvent)
 			end
 
-			self.EditBoxEvent = service.UserInputService.InputBegan:Connect(function(input)
+			self.EditBoxEvent = Main.TrackConnection(service.UserInputService.InputBegan:Connect(function(input)
 				if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
 
 				local keycodes = Enum.KeyCode
@@ -7729,14 +7788,14 @@ local function main()
 
 				local function setupMove(key,func)
 					local endCon,finished
-					endCon = service.UserInputService.InputEnded:Connect(function(input)
+					endCon = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 						if input.KeyCode ~= key then return end
-						endCon:Disconnect()
+						Main.DisconnectConnection(endCon)
 						finished = true
-					end)
+					end))
 					func()
 					Lib.FastWait(0.5)
-					while not finished do func() Lib.FastWait(0.03) end
+					while not finished and not Main.IsUninitialized do func() Lib.FastWait(0.03) end
 				end
 
 				if keycode == keycodes.Down then
@@ -7840,12 +7899,13 @@ local function main()
 						self:Refresh()
 					end
 				end
-			end)
+			end))
 		end
 
 		funcs.DisconnectEditBoxEvent = function(self)
 			if self.EditBoxEvent then
-				self.EditBoxEvent:Disconnect()
+				Main.DisconnectConnection(self.EditBoxEvent)
+				self.EditBoxEvent = nil
 			end
 		end
 
@@ -8669,9 +8729,9 @@ local function main()
 				{7,"Frame",{BackgroundColor3=Color3.new(0.90196084976196,0.90196084976196,0.90196084976196),BorderSizePixel=0,Name="left",Parent={4},Size=UDim2.new(0,0,0,16),}},
 				{8,"Frame",{AnchorPoint=Vector2.new(1,0),BackgroundColor3=Color3.new(0.90196084976196,0.90196084976196,0.90196084976196),BorderSizePixel=0,Name="right",Parent={4},Position=UDim2.new(0,14,0,0),Size=UDim2.new(0,0,0,16),}},
 				{9,"Frame",{AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,ClipsDescendants=true,Name="checkmark",Parent={4},Position=UDim2.new(0.5,0,0.5,0),Size=UDim2.new(0,0,0,20),}},
-				{10,"ImageLabel",{AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image="rbxassetid://6234266378",Parent={9},Position=UDim2.new(0.5,0,0.5,0),ScaleType=3,Size=UDim2.new(0,15,0,11),}},
-				{11,"ImageLabel",{AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://6401617475",ImageColor3=Color3.new(0.20784313976765,0.69803923368454,0.98431372642517),Name="checkmark2",Parent={4},Position=UDim2.new(0.5,0,0.5,0),Size=UDim2.new(0,12,0,12),Visible=false,}},
-				{12,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://6425281788",ImageTransparency=0.20000000298023,Name="middle",Parent={4},ScaleType=2,Size=UDim2.new(1,0,1,0),TileSize=UDim2.new(0,2,0,2),Visible=false,}},
+				{10,"ImageLabel",{AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image=Main.GetAssetId("checkmark.png","rbxassetid://6234266378"),Parent={9},Position=UDim2.new(0.5,0,0.5,0),ScaleType=3,Size=UDim2.new(0,15,0,11),}},
+				{11,"ImageLabel",{AnchorPoint=Vector2.new(0.5,0.5),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("checkmark.png","rbxassetid://6401617475"),ImageColor3=Color3.new(0.20784313968454,0.69803923368454,0.98431372642517),Name="checkmark2",Parent={4},Position=UDim2.new(0.5,0,0.5,0),Size=UDim2.new(0,12,0,12),Visible=false,}},
+				{12,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("luvlies.png","rbxassetid://6425281788"),ImageTransparency=0.20000000298023,Name="middle",Parent={4},ScaleType=2,Size=UDim2.new(1,0,1,0),TileSize=UDim2.new(0,2,0,2),Visible=false,}},
 				{13,"UICorner",{CornerRadius=UDim.new(0,2),Parent={3},}},
 			})
 			local outline = checkbox.outline
@@ -8959,7 +9019,7 @@ local function main()
 				{1,"ScreenGui",{Name="BrickColor",}},
 				{2,"Frame",{Active=true,BackgroundColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),BorderColor3=Color3.new(0.1294117718935,0.1294117718935,0.1294117718935),Parent={1},Position=UDim2.new(0.40000000596046,0,0.40000000596046,0),Size=UDim2.new(0,337,0,380),}},
 				{3,"TextButton",{BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),BorderSizePixel=0,Font=3,Name="MoreColors",Parent={2},Position=UDim2.new(0,5,1,-30),Size=UDim2.new(1,-10,0,25),Text="More Colors",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-				{4,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image="rbxassetid://1281023007",ImageColor3=Color3.new(0.33333334326744,0.33333334326744,0.49803924560547),Name="Hex",Parent={2},Size=UDim2.new(0,35,0,35),Visible=false,}},
+				{4,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image=Main.GetAssetId("honey icon.png","rbxassetid://1281023007"),ImageColor3=Color3.new(0.33333334326744,0.33333334326744,0.49803924560547),Name="Hex",Parent={2},Size=UDim2.new(0,35,0,35),Visible=false,}},
 			})
 			local colorFrame = gui.Frame
 			local hex = colorFrame.Hex
@@ -9017,18 +9077,19 @@ local function main()
 			if y + sizeY > maxY then reverseY = true end
 
 			local closable = false
-			if self.CloseEvent then self.CloseEvent:Disconnect() end
+			if self.CloseEvent then Main.DisconnectConnection(self.CloseEvent) end
 
-			self.CloseEvent = service.UserInputService.InputBegan:Connect(function(input)
+			self.CloseEvent = Main.TrackConnection(service.UserInputService.InputBegan:Connect(function(input)
 				if not closable or (input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch) then
 					return
 				end
 
 				if not Lib.CheckMouseInGui(self.Gui.Frame) then
-					self.CloseEvent:Disconnect()
+					Main.DisconnectConnection(self.CloseEvent)
+					self.CloseEvent = nil
 					self:Close()
 				end
-			end)
+			end))
 
 
 			if reverseY then
@@ -9043,6 +9104,10 @@ local function main()
 		end
 
 		funcs.Close = function(self)
+			if self.CloseEvent then
+				Main.DisconnectConnection(self.CloseEvent)
+				self.CloseEvent = nil
+			end
 			self.Gui.Parent = nil
 			self.OnCancel:Fire()
 		end
@@ -9093,7 +9158,7 @@ local function main()
 				{16,"Frame",{BackgroundColor3=Color3.new(0.86274510622025,0.86274510622025,0.86274510622025),BorderSizePixel=0,Parent={13},Position=UDim2.new(0,6,0,3),Size=UDim2.new(0,5,0,1),}},
 				{17,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Title",Parent={4},Position=UDim2.new(0,-40,0,0),Size=UDim2.new(0,34,1,0),Text="Blue:",TextColor3=Color3.new(0.86274516582489,0.86274516582489,0.86274516582489),TextSize=14,TextXAlignment=1,}},
 				{18,"Frame",{BackgroundColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),BorderSizePixel=0,ClipsDescendants=true,Name="ColorSpaceFrame",Parent={1},Position=UDim2.new(1,-261,0,4),Size=UDim2.new(0,222,0,202),}},
-				{19,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BorderColor3=Color3.new(0.37647062540054,0.37647062540054,0.37647062540054),BorderSizePixel=0,Image="rbxassetid://1072518406",Name="ColorSpace",Parent={18},Position=UDim2.new(0,1,0,1),Size=UDim2.new(0,220,0,200),}},
+				{19,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BorderColor3=Color3.new(0.37647062540054,0.37647062540054,0.37647062540054),BorderSizePixel=0,Image=Main.GetAssetId("colors.png","rbxassetid://1072518406"),Name="ColorSpace",Parent={18},Position=UDim2.new(0,1,0,1),Size=UDim2.new(0,220,0,200),}},
 				{20,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Name="Scope",Parent={19},Position=UDim2.new(0,210,0,190),Size=UDim2.new(0,20,0,20),}},
 				{21,"Frame",{BackgroundColor3=Color3.new(0,0,0),BorderSizePixel=0,Name="Line",Parent={20},Position=UDim2.new(0,9,0,0),Size=UDim2.new(0,2,0,20),}},
 				{22,"Frame",{BackgroundColor3=Color3.new(0,0,0),BorderSizePixel=0,Name="Line",Parent={20},Position=UDim2.new(0,0,0,9),Size=UDim2.new(0,20,0,2),}},
@@ -9172,7 +9237,7 @@ local function main()
 				{95,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Title",Parent={82},Position=UDim2.new(0,-40,0,0),Size=UDim2.new(0,34,1,0),Text="Val:",TextColor3=Color3.new(0.86274516582489,0.86274516582489,0.86274516582489),TextSize=14,TextXAlignment=1,}},
 				{96,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),Font=3,Name="Cancel",Parent={1},Position=UDim2.new(1,-105,1,-28),Size=UDim2.new(0,100,0,25),Text="Cancel",TextColor3=Color3.new(0.86274516582489,0.86274516582489,0.86274516582489),TextSize=14,}},
 				{97,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),Font=3,Name="Ok",Parent={1},Position=UDim2.new(1,-210,1,-28),Size=UDim2.new(0,100,0,25),Text="OK",TextColor3=Color3.new(0.86274516582489,0.86274516582489,0.86274516582489),TextSize=14,}},
-				{98,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BorderColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),Image="rbxassetid://1072518502",Name="ColorStrip",Parent={1},Position=UDim2.new(1,-30,0,5),Size=UDim2.new(0,13,0,200),}},
+				{98,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BorderColor3=Color3.new(0.21568627655506,0.21568627655506,0.21568627655506),Image=Main.GetAssetId("colorstrip.png","rbxassetid://1072518502"),Name="ColorStrip",Parent={1},Position=UDim2.new(1,-30,0,5),Size=UDim2.new(0,13,0,200),}},
 				{99,"Frame",{BackgroundColor3=Color3.new(0.3137255012989,0.3137255012989,0.3137255012989),BackgroundTransparency=1,BorderSizePixel=0,Name="ArrowFrame",Parent={1},Position=UDim2.new(1,-16,0,1),Size=UDim2.new(0,5,0,208),}},
 				{100,"Frame",{BackgroundTransparency=1,Name="Arrow",Parent={99},Position=UDim2.new(0,-2,0,-4),Size=UDim2.new(0,8,0,16),}},
 				{101,"Frame",{BackgroundColor3=Color3.new(0,0,0),BorderSizePixel=0,Parent={100},Position=UDim2.new(0,2,0,8),Size=UDim2.new(0,1,0,1),}},
@@ -10700,15 +10765,15 @@ local function main()
 				end)
 
 				local release
-				release = service.UserInputService.InputEnded:Connect(function(input)
+				release = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType["MouseButton" .. button] then
-						release:Disconnect()
+						Main.DisconnectConnection(release)
 						if Lib.CheckMouseInGui(item) and self.LastButton == button and self.LastItem == item then
 							self.InputDown = false -- infinite yield dev forgot to do this, and ended up OnRelease fired twice ??
 							self["OnRelease"]:Fire(item,self.Combo,button)
 						end
 					end
-				end)
+				end))
 
 				self["OnDown"]:Fire(item,self.Combo,button)
 			end
@@ -10928,7 +10993,7 @@ local function main()
 		settingsButton.BackgroundTransparency = 1
 		settingsButton.Size = UDim2.new(0,15,0,15)
 		settingsButton.Position = UDim2.new(1,-3,0,3)
-		settingsButton.Image = "rbxassetid://6578871732"
+		settingsButton.Image = Main.GetAssetId("settings.png","rbxassetid://6578871732")
 		settingsButton.ImageTransparency = 0.5
 		-- mobile input check
 		if UserInputService:GetLastInputType() == Enum.UserInputType.Touch then
@@ -10986,7 +11051,7 @@ local function main()
 			end
 		end)
 
-		RunService.RenderStepped:Connect(function(dt)
+		Main.TrackConnection(RunService.RenderStepped:Connect(function(dt)
 			if camera and model then
 				if not dragging and ModelViewer.AutoRotate then
 					rotationY += ModelViewer.RotationSpeed * dt * 60
@@ -11001,7 +11066,7 @@ local function main()
 				camera.CFrame = CFrame.lookAt(camCF.Position, center)
 				
 			end
-		end)
+		end))
 		
 		-- context stuffs
 		local context = Lib.ContextMenu.new()
@@ -11152,12 +11217,7 @@ local function main()
 	return ModelViewer
 end
 
--- TODO: Remove when open source
-if gethsfuncs then
-	_G.moduleData = {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-else
-	return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-end
+return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
 end,
 ["Properties"] = function()
 --[[
@@ -11208,6 +11268,7 @@ local function main()
 	local isa = game.IsA
 	local getAttribute = game.GetAttribute
 	local setAttribute = game.SetAttribute
+	local collectionService = game:GetService("CollectionService")
 
 	Properties.GuiElems = {}
 	Properties.Index = 0
@@ -11221,6 +11282,7 @@ local function main()
 	Properties.SearchText = ""
 
 	Properties.AddAttributeProp = {Category = "Attributes", Class = "", Name = "", SpecialRow = "AddAttribute", Tags = {}}
+	Properties.AddTagProp = {Category = "Tags", Class = "", Name = "", SpecialRow = "AddTag", Tags = {}}
 	Properties.SoundPreviewProp = {Category = "Data", ValueType = {Name = "SoundPlayer"}, Class = "Sound", Name = "Preview", Tags = {}}
 
 	Properties.IgnoreProps = {
@@ -11444,6 +11506,7 @@ local function main()
 		if #sList > 0 then
 			for i = 1,#propList do
 				local prop = propList[i]
+				if prop.SpecialRow then continue end
 				local propName,propClass = prop.Name,prop.Class
 				local typeData = prop.RootType or prop.ValueType
 				local typeName = typeData.Name
@@ -11463,7 +11526,7 @@ local function main()
 
 				t_clear(conflictMap)
 
-				if not isMultiType then
+				if not isMultiType and not prop.IsTag then
 					local firstVal,firstObj,firstSet
 					local classList = classLists[prop.Class] or {}
 					for c = 1,#classList do
@@ -11564,7 +11627,9 @@ local function main()
 		local getAttributes = game.GetAttributes
 		local maxAttrs = Settings.Properties.MaxAttributes
 		local showingAttrs = Settings.Properties.ShowAttributes
+		local showingTags = Settings.Properties.ShowTags
 		local foundAttrs = {}
+		local foundTags = {}
 		local attrCount = 0
 		local typeof = typeof
 		local typeNameConvert = Properties.TypeNameConvert
@@ -11622,11 +11687,30 @@ local function main()
 					end
 				end
 			end
+
+			if showingTags then
+				for _,tag in ipairs(collectionService:GetTags(obj)) do
+					if not foundTags[tag] then
+						local tagProp = {IsTag = true, TagName = tag, Name = tag, DisplayName = tag, Class = "Instance", ValueType = {Name = "bool"}, Category = "Tags", Tags = {}}
+						props[propCount] = tagProp
+						propCount = propCount + 1
+						foundTags[tag] = true
+					end
+				end
+			end
 		end
 
+		if #props > 0 then
+			props[#props+1] = Properties.AddAttributeProp
+			props[#props+1] = Properties.AddTagProp
+		end
+
+		local tagCategoryOrder = (categoryOrder.Attributes or 9998) + 1
 		table.sort(props,function(a,b)
 			if a.Category ~= b.Category then
-				return (categoryOrder[a.Category] or 9999) < (categoryOrder[b.Category] or 9999)
+				local aOrder = categoryOrder[a.Category] or (a.Category == "Tags" and tagCategoryOrder) or 9999
+				local bOrder = categoryOrder[b.Category] or (b.Category == "Tags" and tagCategoryOrder) or 9999
+				return aOrder < bOrder
 			else
 				local aOrder = (RMDCustomOrders[a.Class] and RMDCustomOrders[a.Class][a.Name]) or 9999999
 				local bOrder = (RMDCustomOrders[b.Class] and RMDCustomOrders[b.Class][b.Name]) or 9999999
@@ -11642,10 +11726,6 @@ local function main()
 		Properties.ClassLists = classLists
 		Properties.ComputeConflicts()
 		--warn("CONFLICT",tick()-start)
-		if #props > 0 then
-			props[#props+1] = Properties.AddAttributeProp
-		end
-
 		Properties.Update()
 		Properties.Refresh()
 	end
@@ -11947,19 +12027,36 @@ local function main()
 		end)
 
 		nameFrame.ToggleAttributes.MouseButton1Click:Connect(function()
-			Settings.Properties.ShowAttributes = not Settings.Properties.ShowAttributes
+			local prop = viewList[index + Properties.Index]
+			if not prop or not prop.CategoryName then return end
+			if prop.CategoryName == "Attributes" then
+				Settings.Properties.ShowAttributes = not Settings.Properties.ShowAttributes
+			elseif prop.CategoryName == "Tags" then
+				Settings.Properties.ShowTags = not Settings.Properties.ShowTags
+			else
+				return
+			end
 			Properties.ShowExplorerProps()
 		end)
 
 		newEntry.RowButton.MouseButton1Click:Connect(function()
-			Properties.DisplayAddAttributeWindow()
+			local prop = viewList[index + Properties.Index]
+			if prop and prop.SpecialRow == "AddTag" then
+				Properties.DisplayAddTagWindow()
+			else
+				Properties.DisplayAddAttributeWindow()
+			end
 		end)
 
 		newEntry.EditAttributeButton.MouseButton1Down:Connect(function()
 			local prop = viewList[index + Properties.Index]
 			if not prop then return end
 
-			Properties.DisplayAttributeContext(prop)
+			if prop.IsTag then
+				Properties.DisplayTagContext(prop)
+			else
+				Properties.DisplayAttributeContext(prop)
+			end
 		end)
 
 		valueFrame.SoundPreview.ControlButton.MouseButton1Click:Connect(function()
@@ -11975,11 +12072,11 @@ local function main()
 			if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
 
 			local releaseEvent,mouseEvent
-			releaseEvent = service.UserInputService.InputEnded:Connect(function(input)
+			releaseEvent = Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
 				if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
-				releaseEvent:Disconnect()
-				mouseEvent:Disconnect()
-			end)
+				Main.DisconnectConnection(releaseEvent)
+				Main.DisconnectConnection(mouseEvent)
+			end))
 
 			local timeLine = newEntry.ValueFrame.SoundPreview.TimeLine
 			local soundObj = Properties.FindFirstObjWhichIsA("Sound")
@@ -12002,11 +12099,11 @@ local function main()
 			end
 			update(input)
 
-			mouseEvent = service.UserInputService.InputChanged:Connect(function(input)
+			mouseEvent = Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
 				if input.UserInputType == Enum.UserInputType.MouseMovement then
 					update(input)
 				end
-			end)
+			end))
 		end)
 
 		newEntry.Parent = propsFrame
@@ -12048,16 +12145,16 @@ local function main()
 		if not sound then
 			sound = Instance.new("Sound")
 			sound.Name = "Preview"
-			sound.Paused:Connect(function()
+			Main.TrackConnection(sound.Paused:Connect(function()
 				local entry = Properties.GetSoundPreviewEntry()
 				if entry then Main.MiscIcons:DisplayByKey(entry.GuiElems.SoundPreview.ControlButton.Icon, "Play") end
-			end)
-			sound.Resumed:Connect(function() Properties.Refresh() end)
-			sound.Ended:Connect(function()
+			end))
+			Main.TrackConnection(sound.Resumed:Connect(function() Properties.Refresh() end))
+			Main.TrackConnection(sound.Ended:Connect(function()
 				local entry = Properties.GetSoundPreviewEntry()
 				if entry then entry.GuiElems.SoundPreviewSlider.Position = UDim2.new(0,-4,0,-8) end
 				Properties.Refresh()
-			end)
+			end))
 			sound.Parent = window.Gui
 			Properties.PreviewSound = sound
 		end
@@ -12099,15 +12196,25 @@ local function main()
 		context:Clear()
 
 		context:Add({Name = "Edit", OnClick = function()
-			Properties.DisplayAddAttributeWindow(prop)
+			if prop.IsTag then
+				Properties.DisplayAddTagWindow(prop)
+			else
+				Properties.DisplayAddAttributeWindow(prop)
+			end
 		end})
 		context:Add({Name = "Delete", OnClick = function()
-			Properties.SetProp(prop,nil,true)
+			if prop.IsTag then
+				Properties.SetProp(prop,false,true)
+			else
+				Properties.SetProp(prop,nil,true)
+			end
 			Properties.ShowExplorerProps()
 		end})
 
 		context:Show()
 	end
+
+	Properties.DisplayTagContext = Properties.DisplayAttributeContext
 
 	Properties.DisplayAddAttributeWindow = function(editAttr)
 		local win = Properties.AddAttributeWindow
@@ -12196,6 +12303,82 @@ local function main()
 		win.Elements.NameBox:SetText("")
 		win.Elements.SaveButton:SetDisabled(true)
 		win.Elements.TypeChooser:SetSelected(1)
+		win:Show()
+	end
+
+	Properties.DisplayAddTagWindow = function(editTag)
+		local win = Properties.AddTagWindow
+		if not win then
+			win = Lib.Window.new()
+			win.Alignable = false
+			win.Resizable = false
+			win:SetTitle("Add Tag")
+			win:SetSize(220,110)
+
+			local nameLabel = Lib.Label.new()
+			nameLabel.Text = "Name"
+			nameLabel.Position = UDim2.new(0,8,0,10)
+			nameLabel.Size = UDim2.new(0,45,0,20)
+			win:Add(nameLabel)
+
+			local nameBox = Lib.ViewportTextBox.new()
+			nameBox.Position = UDim2.new(0,55,0,10)
+			nameBox.Size = UDim2.new(1,-65,0,20)
+			win:Add(nameBox,"NameBox")
+
+			local errorLabel = Lib.Label.new()
+			errorLabel.Text = ""
+			errorLabel.Position = UDim2.new(0,5,1,-45)
+			errorLabel.Size = UDim2.new(1,-10,0,20)
+			errorLabel.TextColor3 = Settings.Theme.Important
+			win:Add(errorLabel,"Error")
+
+			local cancelButton = Lib.Button.new()
+			cancelButton.Text = "Cancel"
+			cancelButton.Position = UDim2.new(1,-97,1,-25)
+			cancelButton.Size = UDim2.new(0,92,0,20)
+			cancelButton.OnClick:Connect(function()
+				win:Close()
+			end)
+			win:Add(cancelButton)
+
+			local addButton = Lib.Button.new()
+			addButton.Text = "Add"
+			addButton.Position = UDim2.new(0,5,1,-25)
+			addButton.Size = UDim2.new(0,92,0,20)
+			addButton:SetDisabled(true)
+			win:Add(addButton,"SaveButton")
+			nameBox.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
+				addButton:SetDisabled(#nameBox:GetText() == 0)
+				errorLabel.Text = ""
+			end)
+			addButton.OnClick:Connect(function()
+				local tag = nameBox:GetText()
+				if #tag == 0 then return end
+				if #tag > 100 then
+					errorLabel.Text = "Error: Tag over 100 chars"
+					return
+				end
+
+				local tagProp = {IsTag = true, TagName = tag, Name = tag, DisplayName = tag, Class = "Instance", ValueType = {Name = "bool"}, Category = "Tags", Tags = {}}
+				Settings.Properties.ShowTags = true
+				if Properties.EditingTag and Properties.EditingTag.TagName ~= tag then
+					Properties.SetProp(Properties.EditingTag,false,true)
+				end
+				Properties.SetProp(tagProp,true,true)
+				Properties.ShowExplorerProps()
+				win:Close()
+			end)
+
+			Properties.AddTagWindow = win
+		end
+
+		Properties.EditingTag = editTag
+		win:SetTitle(editTag and "Edit Tag" or "Add Tag")
+		win.Elements.SaveButton.Text = editTag and "Save" or "Add"
+		win.Elements.Error.Text = ""
+		win.Elements.NameBox:SetText(editTag and editTag.TagName or "")
+		win.Elements.SaveButton:SetDisabled(not editTag)
 		win:Show()
 	end
 
@@ -12380,6 +12563,15 @@ local function main()
 
 	Properties.GetPropVal = function(prop,obj)
 		if prop.MultiType then return "<Multiple Types>" end
+		if prop.IsTag then
+			local selection = Explorer.Selection.List
+			for i = 1,#selection do
+				if collectionService:HasTag(selection[i].Obj,prop.TagName) then
+					return true
+				end
+			end
+			return false
+		end
 		if not obj then return end
 
 		local propVal
@@ -12553,7 +12745,7 @@ local function main()
 
 		-- Clear connections
 		for i = 1,#propCons do
-			propCons[i]:Disconnect()
+			Main.DisconnectConnection(propCons[i])
 		end
 		table.clear(propCons)
 
@@ -12585,10 +12777,11 @@ local function main()
 				entry.Size = UDim2.new(scaleType == 0 and 0 or 1, scaleType == 0 and Properties.ViewWidth + valueWidth or 0,0,22)
 
 				if prop.SpecialRow then
-					if prop.SpecialRow == "AddAttribute" then
+					if prop.SpecialRow == "AddAttribute" or prop.SpecialRow == "AddTag" then
 						nameFrame.Visible = false
 						valueFrame.Visible = false
 						guiElems.RowButton.Visible = true
+						guiElems.RowButton.Text = prop.SpecialRow == "AddTag" and "Add Tag" or "Add Attribute"
 					end
 				else
 					-- Revert special row stuff
@@ -12614,11 +12807,16 @@ local function main()
 						nameFrame.Size = UDim2.new(1,0,1,0)
 						editAttributeButton.Visible = false
 
-						local showingAttrs = Settings.Properties.ShowAttributes
+						local showingAttrs
+						if prop.CategoryName == "Attributes" then
+							showingAttrs = Settings.Properties.ShowAttributes
+						else
+							showingAttrs = Settings.Properties.ShowTags
+						end
 						toggleAttributes.Position = UDim2.new(1,-85-leftOffset,0,0)
 						toggleAttributes.Text = (showingAttrs and "[Setting: ON]" or "[Setting: OFF]")
 						toggleAttributes.TextColor3 = Settings.Theme.Text
-						toggleAttributes.Visible = (prop.CategoryName == "Attributes")
+						toggleAttributes.Visible = (prop.CategoryName == "Attributes" or prop.CategoryName == "Tags")
 					else
 						local propName = prop.Name
 						local typeData = prop.ValueType
@@ -12626,8 +12824,8 @@ local function main()
 						local tags = prop.Tags
 						local propObj = autoUpdateObjs[gName]
 
-						local attributeOffset = (prop.IsAttribute and 20 or 0)
-						editAttributeButton.Visible = (prop.IsAttribute and not prop.RootType)
+						local attributeOffset = ((prop.IsAttribute or prop.IsTag) and 20 or 0)
+						editAttributeButton.Visible = ((prop.IsAttribute or prop.IsTag) and not prop.RootType)
 						toggleAttributes.Visible = false
 
 						-- Moving around the frames
@@ -12654,13 +12852,13 @@ local function main()
 						Properties.DisplayProp(prop,i)
 						if propObj then
 							if prop.IsAttribute then
-								propCons[#propCons+1] = getAttributeChangedSignal(propObj,prop.AttributeName):Connect(function()
+								propCons[#propCons+1] = Main.TrackConnection(getAttributeChangedSignal(propObj,prop.AttributeName):Connect(function()
 									Properties.DisplayProp(prop,i)
-								end)
+								end))
 							else
-								propCons[#propCons+1] = getPropChangedSignal(propObj,propName):Connect(function()
+								propCons[#propCons+1] = Main.TrackConnection(getPropChangedSignal(propObj,propName):Connect(function()
 									Properties.DisplayProp(prop,i)
-								end)
+								end))
 							end
 						end
 
@@ -12733,6 +12931,20 @@ local function main()
 
 	Properties.SetProp = function(prop,val,noupdate,prevAttribute)
 		local sList = Explorer.Selection.List
+		if prop.IsTag then
+			for i = 1,#sList do
+				local obj = sList[i].Obj
+				local hasTag = collectionService:HasTag(obj,prop.TagName)
+				if val and not hasTag then
+					collectionService:AddTag(obj,prop.TagName)
+				elseif not val and hasTag then
+					collectionService:RemoveTag(obj,prop.TagName)
+				end
+			end
+			if not noupdate then Properties.ShowExplorerProps() end
+			return
+		end
+
 		local propName = prop.Name
 		local subName = prop.SubName
 		local propClass = prop.Class
@@ -12938,7 +13150,7 @@ local function main()
 			{2,"Frame",{BackgroundColor3=Color3.new(0.04313725605607,0.35294118523598,0.68627452850342),BackgroundTransparency=1,BorderColor3=Color3.new(0.33725491166115,0.49019610881805,0.73725491762161),BorderSizePixel=0,Name="NameFrame",Parent={1},Position=UDim2.new(0,20,0,0),Size=UDim2.new(1,-40,1,0),}},
 			{3,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="PropName",Parent={2},Position=UDim2.new(0,2,0,0),Size=UDim2.new(1,-2,1,0),Text="Anchored",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=0.10000000149012,TextTruncate=1,TextXAlignment=0,}},
 			{4,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ClipsDescendants=true,Font=3,Name="Expand",Parent={2},Position=UDim2.new(0,-20,0,1),Size=UDim2.new(0,20,0,20),Text="",TextSize=14,Visible=false,}},
-			{5,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5642383285",ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={4},Position=UDim2.new(0,2,0,2),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
+			{5,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("Test_Icons.png","rbxassetid://5642383285"),ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={4},Position=UDim2.new(0,2,0,2),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
 			{6,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Font=4,Name="ToggleAttributes",Parent={2},Position=UDim2.new(1,-85,0,0),Size=UDim2.new(0,85,0,22),Text="[SETTING: OFF]",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=0.10000000149012,Visible=false,}},
 			{7,"Frame",{BackgroundColor3=Color3.new(0.04313725605607,0.35294118523598,0.68627452850342),BackgroundTransparency=1,BorderColor3=Color3.new(0.33725491166115,0.49019607901573,0.73725491762161),BorderSizePixel=0,Name="ValueFrame",Parent={1},Position=UDim2.new(1,-100,0,0),Size=UDim2.new(0,80,1,0),}},
 			{8,"Frame",{BackgroundColor3=Color3.new(0.14117647707462,0.14117647707462,0.14117647707462),BorderColor3=Color3.new(0.33725491166115,0.49019610881805,0.73725491762161),BorderSizePixel=0,Name="Line",Parent={7},Position=UDim2.new(0,-1,0,0),Size=UDim2.new(0,1,1,0),}},
@@ -12954,11 +13166,11 @@ local function main()
 			{18,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="SettingsButton",Parent={7},Position=UDim2.new(1,-20,0,0),Size=UDim2.new(0,20,0,22),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,Visible=false,}},
 			{19,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Name="SoundPreview",Parent={7},Size=UDim2.new(1,0,1,0),Visible=false,}},
 			{20,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="ControlButton",Parent={19},Size=UDim2.new(0,20,0,22),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{21,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5642383285",ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={20},Position=UDim2.new(0,2,0,3),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
+			{21,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("Test_Icons.png","rbxassetid://5642383285"),ImageRectOffset=Vector2.new(144,16),ImageRectSize=Vector2.new(16,16),Name="Icon",Parent={20},Position=UDim2.new(0,2,0,3),ScaleType=4,Size=UDim2.new(0,16,0,16),}},
 			{22,"Frame",{BackgroundColor3=Color3.new(0.3137255012989,0.3137255012989,0.3137255012989),BorderSizePixel=0,Name="TimeLine",Parent={19},Position=UDim2.new(0,26,0.5,-1),Size=UDim2.new(1,-34,0,2),}},
 			{23,"Frame",{BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderColor3=Color3.new(0.1294117718935,0.1294117718935,0.1294117718935),Name="Slider",Parent={22},Position=UDim2.new(0,-4,0,-8),Size=UDim2.new(0,8,0,18),}},
 			{24,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="EditAttributeButton",Parent={1},Position=UDim2.new(1,-20,0,0),Size=UDim2.new(0,20,0,22),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{25,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5034718180",ImageTransparency=0.20000000298023,Name="Icon",Parent={24},Position=UDim2.new(0,2,0,3),Size=UDim2.new(0,16,0,16),}},
+			{25,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("settings2.png","rbxassetid://5034718180"),ImageTransparency=0.20000000298023,Name="Icon",Parent={24},Position=UDim2.new(0,2,0,3),Size=UDim2.new(0,16,0,16),}},
 			{26,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderSizePixel=0,Font=3,Name="RowButton",Parent={1},Size=UDim2.new(1,0,1,0),Text="Add Attribute",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=0.10000000149012,Visible=false,}},
 			--{27,"UIStroke",{ApplyStrokeMode=Enum.ApplyStrokeMode.Border,Color=Color3.fromRGB(33,33,33),Thickness=1,Parent={1}}}
 		})
@@ -12988,9 +13200,9 @@ local function main()
 			{4,"TextBox",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ClearTextOnFocus=false,Font=3,Name="SearchBox",Parent={3},PlaceholderColor3=Color3.new(0.39215689897537,0.39215689897537,0.39215689897537),PlaceholderText="Search properties",Position=UDim2.new(0,4,0,0),Size=UDim2.new(1,-24,0,18),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,TextXAlignment=0,}},
 			{5,"UICorner",{CornerRadius=UDim.new(0,2),Parent={3},}},
 			{6,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Reset",Parent={3},Position=UDim2.new(1,-17,0,1),Size=UDim2.new(0,16,0,16),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{7,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5034718129",ImageColor3=Color3.new(0.39215686917305,0.39215686917305,0.39215686917305),Parent={6},Size=UDim2.new(0,16,0,16),}},
+			{7,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("search2.png","rbxassetid://5034718129"),ImageColor3=Color3.new(0.39215686917305,0.39215686917305,0.39215686917305),Parent={6},Size=UDim2.new(0,16,0,16),}},
 			{8,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.12549020349979,0.12549020349979,0.12549020349979),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="Refresh",Parent={2},Position=UDim2.new(1,-20,0,1),Size=UDim2.new(0,18,0,18),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,Visible=false,}},
-			{9,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://5642310344",Parent={8},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,12,0,12),}},
+			{9,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("refresh-icon3.png","rbxassetid://5642310344"),Parent={8},Position=UDim2.new(0,3,0,3),Size=UDim2.new(0,12,0,12),}},
 			{10,"Frame",{BackgroundColor3=Color3.new(0.15686275064945,0.15686275064945,0.15686275064945),BorderSizePixel=0,Name="ScrollCorner",Parent={1},Position=UDim2.new(1,-16,1,-16),Size=UDim2.new(0,16,0,16),Visible=false,}},
 			{11,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,ClipsDescendants=true,Name="List",Parent={1},Position=UDim2.new(0,0,0,23),Size=UDim2.new(1,0,1,-23),}},
 		})
@@ -13062,6 +13274,16 @@ local function main()
 		scrollH.Gui.Parent = window.GuiElems.Content
 		Properties.InitInputBox()
 		Properties.InitSearch()
+	end
+
+	Properties.Uninit = function()
+		for index = #propCons, 1, -1 do
+			Main.DisconnectConnection(propCons[index])
+			propCons[index] = nil
+		end
+		if Properties.PreviewSound then
+			Properties.SetSoundPreview(false)
+		end
 	end
 
 	return Properties
@@ -13369,12 +13591,7 @@ local function main()
 	return SaveInstance
 end
 
--- TODO: Remove when open source
-if gethsfuncs then
-	_G.moduleData = {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-else
-	return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-end
+return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
 end,
 ["ScriptViewer"] = function()
 --[[
@@ -13424,7 +13641,12 @@ local function getPath(obj)
 	if obj.Parent == nil then
 		return "Nil parented"
 	else
-		return Explorer.GetInstancePath(obj)
+		local path = Explorer.GetInstancePath(obj)
+		local playerPrefix = 'game:GetService("Players").'..plr.Name
+		if path:sub(1,#playerPrefix) == playerPrefix then
+			path = 'game:GetService("Players").LocalPlayer'..path:sub(#playerPrefix + 1)
+		end
+		return path
 	end
 end
 
@@ -13633,7 +13855,6 @@ local function main()
 	end
 	
 	ScriptViewer.ViewScript = function(scr)
-		local oldtick = tick()
 		local s,source = pcall(env.decompile or function() end,scr)
 
 		if not s or not source then
@@ -13656,17 +13877,17 @@ local function main()
 			PreviousScr = scr
 			dumpbtn.TextColor3 = Color3.new(1,1,1)
 
-			local decompiled = source
+			local decompiled = source:gsub("^[\r\n]+",""):gsub("[\r\n]+$","")
+
+			source = "-- Script Path: "..getPath(scr).."\n"
 			
 			if Settings.ScriptViewer.ShowMoreInfo then
-				source = "-- Script Path: "..getPath(scr).."\n"
-			    source = source .. "-- Class: "..scr.ClassName.."\n"
+				source = source .. "-- Class: "..scr.ClassName.."\n"
 				source = source .. "-- Executor: "..executorName.." ("..executorVersion..")\n\n"
 			end
 			
-			source = source .. decompiled
+			source = source .. decompiled .. "\n"
 
-			oldtick = nil
 			decompiled = nil
 		end
 
@@ -13677,12 +13898,7 @@ local function main()
 	return ScriptViewer
 end
 
--- TODO: Remove when open source
-if gethsfuncs then
-	_G.moduleData = {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-else
-	return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-end
+return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
 end,
 ["SettingsWindow"] = function()
 --[[
@@ -13693,7 +13909,7 @@ end,
 
 -- Common Locals
 local Main,Lib,Apps,Settings -- Main Containers
-local Explorer, Properties, ScriptViewer, SettingsWindow, Notebook, AIChat -- Major Apps
+local Explorer, Properties, ScriptViewer, SettingsWindow, Notebook -- Major Apps
 local API,RMD,env,service,plr,create,createSimple -- Main Locals
 
 local function initDeps(data)
@@ -13717,7 +13933,6 @@ local function initAfterMain()
 	ScriptViewer = Apps.ScriptViewer
 	SettingsWindow = Apps.SettingsWindow
 	Notebook = Apps.Notebook
-	AIChat = Apps.AIChat
 end
 
 local function main()
@@ -13975,6 +14190,11 @@ local function main()
 		-- Options
 		
 		AddSeperator("UI")
+
+		local useGetCustomAsset = AddCheckbox("Use GetCustomAsset", Settings.Assets.UseGetCustomAsset)
+		useGetCustomAsset.OnInput:Connect(function()
+			Settings.Assets.UseGetCustomAsset = useGetCustomAsset.Toggled
+		end)
 		
 		local titleonmiddle = AddCheckbox("Window Title On Middle", Settings.Window.TitleOnMiddle)
 		titleonmiddle.OnInput:Connect(function()
@@ -13993,9 +14213,9 @@ local function main()
 		
 		AddSeperator("Explorer")
 		
-		local clickRename = AddCheckbox("Click to Rename", Settings.Explorer.ClickToRename)
-		clickRename.OnInput:Connect(function()
-			Settings.Explorer.ClickToRename = clickRename.Toggled
+		local draggablePill = AddCheckbox("Draggable Dex Pill", Settings.Explorer.DraggablePill)
+		draggablePill.OnInput:Connect(function()
+			Settings.Explorer.DraggablePill = draggablePill.Toggled
 		end)
 		
 		local partSelectionBox = AddCheckbox("Part Selection Box", Settings.Explorer.PartSelectionBox)
@@ -14023,10 +14243,13 @@ local function main()
 		local showAttributes = AddCheckbox("Show Attributes", Settings.Properties.ShowAttributes)
 		showAttributes.OnInput:Connect(function()
 			Settings.Properties.ShowAttributes = showAttributes.Toggled
+			if Properties then Properties.ShowExplorerProps() end
 		end)
-		local clearOnFocus = AddCheckbox("Clear On Focus", Settings.Properties.ClearOnFocus)
-		clearOnFocus.OnInput:Connect(function()
-			Settings.Properties.ClearOnFocus = clearOnFocus.Toggled
+		
+		local showTags = AddCheckbox("Show Tags", Settings.Properties.ShowTags)
+		showTags.OnInput:Connect(function()
+			Settings.Properties.ShowTags = showTags.Toggled
+			if Properties then Properties.ShowExplorerProps() end
 		end)
 		
 		AddSeperator("Script Viewer")
@@ -14036,133 +14259,31 @@ local function main()
 			Settings.ScriptViewer.ShowMoreInfo = showMoreInfo.Toggled
 		end)
 		
-        AddSeperator("Decompiler")
-		AddText("If executor does not support decompile, it will use the fallback option.")
-		AddText("'getbytecode' is mandatory to use fallback decompilers.")
-
-		local decompilerOption = {"Lua Expert", "DecompilerLol", "Shiny", "x2125", "Konstant", "Oracle"}
+		AddSeperator("Decompiler")
+		local decompilerOption = {"luaexpert","luacid","x2125","sabre"}
 		local decompiler = AddDropdown("Decompiler Fallback", decompilerOption, Settings.Decompiler.DecompilerFallback, false, 125)
-
-		local ShinyPort = AddTextbox("Shiny Decompiler Port", tostring(Settings.Decompiler.ShinyDecompilerPort), 50)
-		ShinyPort.Parent.Visible = Settings.Decompiler.DecompilerFallback == "Shiny"
-
-		local OracleKey = AddTextbox("Oracle API Key", Settings.Decompiler.OracleAPIKey or "", 150)
-		OracleKey.Parent.Visible = Settings.Decompiler.DecompilerFallback == "Oracle"
-
-		local OracleVersion = AddDropdown("Oracle Version", {"1", "2"}, tostring(Settings.Decompiler.OracleVersion or 2), false, 60)
-		OracleVersion.Gui.Parent.Visible = Settings.Decompiler.DecompilerFallback == "Oracle"
-
 		decompiler.OnSelect:Connect(function()
 			Settings.Decompiler.DecompilerFallback = decompiler.Selected
-			ShinyPort.Parent.Visible = decompiler.Selected == "Shiny"
-			OracleKey.Parent.Visible = decompiler.Selected == "Oracle"
-			OracleVersion.Gui.Parent.Visible = decompiler.Selected == "Oracle"
 		end)
-
-		ShinyPort.FocusLost:Connect(function()
-			local portinput = tonumber(ShinyPort.Text)
-			if not portinput then
-				ShinyPort.Text = Settings.Decompiler.ShinyDecompilerPort
-			else
-				if portinput > 0 and portinput <= 65535 then
-					Settings.Decompiler.ShinyDecompilerPort = portinput
-				else
-					ShinyPort.Text = Settings.Decompiler.ShinyDecompilerPort
-				end
-			end
-		end)
-
-		OracleKey.FocusLost:Connect(function()
-			Settings.Decompiler.OracleAPIKey = OracleKey.Text
-		end)
-
-		OracleVersion.OnSelect:Connect(function()
-			Settings.Decompiler.OracleVersion = tonumber(OracleVersion.Selected)
-		end)
-
 		local preferFallback = AddCheckbox("Prefer Fallback Decompiler", Settings.Decompiler.PreferDecompilerFallback)
 		preferFallback.OnInput:Connect(function()
 			Settings.Decompiler.PreferDecompilerFallback = preferFallback.Toggled
 		end)
-
-		local stripHeader = AddCheckbox("Strip Decompiler Header", Settings.Decompiler.StripHeader)
-		stripHeader.OnInput:Connect(function()
-			Settings.Decompiler.StripHeader = stripHeader.Toggled
-		end)
-		
-        AddSeperator("AIChat")
-		AddText("Configure AI Chat with Claude, OpenAI, Gemini or Pollinations.")
-
-		local aiModels = {}
-		pcall(function()
-			local res = game:HttpGet("https://raw.githubusercontent.com/infyif/dex/main/AI/models")
-			aiModels = loadstring(res)()
-		end)
-
-		if not next(aiModels) then
-			aiModels = {
-				["Claude"] = {"claude-sonnet-4-6"},
-				["OpenAI"] = {"gpt-4o"},
-				["Gemini"] = {"gemini-2.5-flash"},
-				["Pollinations"] = {"openai"},
-			}
-		end
-
-		local apiKeyInput = AddTextbox("API Key", Settings.AIChat.APIKey, 150)
-		apiKeyInput.Parent.Visible = Settings.AIChat.Provider ~= "Pollinations"
-		apiKeyInput.FocusLost:Connect(function()
-			Settings.AIChat.APIKey = apiKeyInput.Text
-		end)
-
-		local providerDropdown = AddDropdown("Provider", {"Claude", "OpenAI", "Gemini", "Pollinations"}, Settings.AIChat.Provider, false, 100)
-
-		local currentModels = aiModels[Settings.AIChat.Provider] or {}
-		local modelDropdown = AddDropdown("Model", currentModels, Settings.AIChat.Model, false, 150)
-		modelDropdown.OnSelect:Connect(function()
-			Settings.AIChat.Model = modelDropdown.Selected
-		end)
-
-		providerDropdown.OnSelect:Connect(function()
-			Settings.AIChat.Provider = providerDropdown.Selected
-			apiKeyInput.Parent.Visible = providerDropdown.Selected ~= "Pollinations"
-			local models = aiModels[providerDropdown.Selected] or {}
-			modelDropdown:SetOptions(models)
-			if #models > 0 then
-				modelDropdown:SetSelected(models[1])
-				Settings.AIChat.Model = models[1]
-			end
-		end)
-
-		local maxTokensInput = AddTextbox("Max Tokens", tostring(Settings.AIChat.MaxTokens), 50)
-		maxTokensInput.FocusLost:Connect(function()
-			local val = tonumber(maxTokensInput.Text)
-			if val and val > 0 and val <= 32000 then
-				Settings.AIChat.MaxTokens = val
-			else
-				maxTokensInput.Text = tostring(Settings.AIChat.MaxTokens)
-			end
-		end)
-
-		local tempInput = AddTextbox("Temperature", tostring(Settings.AIChat.Temperature), 50)
-		tempInput.FocusLost:Connect(function()
-			local val = tonumber(tempInput.Text)
-			if val and val >= 0 and val <= 1 then
-				Settings.AIChat.Temperature = val
-			else
-				tempInput.Text = tostring(Settings.AIChat.Temperature)
-			end
+		local preferStrip = AddCheckbox("Strip Decompiler Header", Settings.Decompiler.StripDecompilerHeader)
+		preferStrip.OnInput:Connect(function()
+			Settings.Decompiler.StripDecompilerHeader = preferStrip.Toggled
 		end)
 		
 		-- Save buttons below
 		local BackgroundreloadButton = Lib.Frame.new()
 		BackgroundreloadButton.Gui.Parent = window.GuiElems.Content
-		BackgroundreloadButton.Size = UDim2.new(0.5,-5,0,20)
-		BackgroundreloadButton.Position = UDim2.new(0,0,1,-20)
+		BackgroundreloadButton.Size = UDim2.new(0.5,-2, 0,20)
+		BackgroundreloadButton.Position = UDim2.new(0,0, 1,-20)
 		
 		local LabelreloadButton = Lib.Label.new()
-		LabelreloadButton.Gui.Parent = window.GuiElems.Content
-		LabelreloadButton.Size = UDim2.new(0.5,-5,0,20)
-		LabelreloadButton.Position = UDim2.new(0,0,1,-20)
+		LabelreloadButton.Gui.Parent = BackgroundreloadButton.Gui
+		LabelreloadButton.Size = UDim2.new(1,0, 1,0)
+		LabelreloadButton.Position = UDim2.new(0,0, 0,0)
 		LabelreloadButton.Gui.Text = "Restart"
 		LabelreloadButton.Gui.TextXAlignment = Enum.TextXAlignment.Center
 		
@@ -14171,6 +14292,27 @@ local function main()
 		reloadButton.Size = UDim2.new(1,0, 1,0)
 		reloadButton.Position = UDim2.new(0,0, 0,0)
 		reloadButton.Transparency = 1
+
+		local BackgroundcloseButton = Lib.Frame.new()
+		BackgroundcloseButton.Gui.Parent = window.GuiElems.Content
+		BackgroundcloseButton.Size = UDim2.new(0.5,-2, 0,20)
+		BackgroundcloseButton.Position = UDim2.new(0.5,2, 1,-20)
+
+		local LabelcloseButton = Lib.Label.new()
+		LabelcloseButton.Gui.Parent = BackgroundcloseButton.Gui
+		LabelcloseButton.Size = UDim2.new(1,0, 1,0)
+		LabelcloseButton.Position = UDim2.new(0,0, 0,0)
+		LabelcloseButton.Gui.Text = "Close"
+		LabelcloseButton.Gui.TextXAlignment = Enum.TextXAlignment.Center
+
+		local closeButton = Instance.new("TextButton")
+		closeButton.Parent = BackgroundcloseButton.Gui
+		closeButton.Size = UDim2.new(1,0, 1,0)
+		closeButton.Position = UDim2.new(0,0, 0,0)
+		closeButton.Transparency = 1
+		closeButton.MouseButton1Click:Connect(function()
+			Main.Uninit()
+		end)
 		
 		reloadButton.MouseButton1Click:Connect(function()
 			window:SetTitle("Settings - Saving")
@@ -14183,600 +14325,15 @@ local function main()
 			
 			window:SetTitle("Settings")
 		end)
-
-		local BackgroundCloseButton = Lib.Frame.new()
-		BackgroundCloseButton.Gui.Parent = window.GuiElems.Content
-		BackgroundCloseButton.Size = UDim2.new(0.5,-5,0,20)
-		BackgroundCloseButton.Position = UDim2.new(0.5,5,1,-20)
-
-		local LabelCloseButton = Lib.Label.new()
-		LabelCloseButton.Gui.Parent = window.GuiElems.Content
-		LabelCloseButton.Size = UDim2.new(0.5,-5,0,20)
-		LabelCloseButton.Position = UDim2.new(0.5,5,1,-20)
-		LabelCloseButton.Gui.Text = "Close"
-		LabelCloseButton.Gui.TextXAlignment = Enum.TextXAlignment.Center
-
-		local closeButton = Instance.new("TextButton")
-		closeButton.Parent = BackgroundCloseButton.Gui
-		closeButton.Size = UDim2.new(1,0,1,0)
-		closeButton.BackgroundTransparency = 1
-
-		closeButton.MouseButton1Click:Connect(function()
-    		Main.Uninit()
-		end)
 	end
 
 	return SettingsWindow
 end
 
--- TODO: Remove when open source
-if gethsfuncs then
-	_G.moduleData = {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-else
-	return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
-end
-end,
-["AIChat"] = function()
-local Main,Lib,Apps,Settings
-local Explorer, Properties, ScriptViewer, Notebook, AIChat
-local API,RMD,env,service,plr,create,createSimple
-
-local function initDeps(data)
-	Main = data.Main Lib = data.Lib Apps = data.Apps Settings = data.Settings
-	API = data.API RMD = data.RMD env = data.env service = data.service
-	plr = data.plr create = data.create createSimple = data.createSimple
-end
-
-local function initAfterMain()
-	Explorer = Apps.Explorer Properties = Apps.Properties
-	ScriptViewer = Apps.ScriptViewer Notebook = Apps.Notebook AIChat = Apps.AIChat
-end
-
-local function main()
-	local AIChat = {}
-	local window, messageList, inputBox
-	local conversationHistory = {}
-	local isProcessing = false
-	local HttpService = game:GetService("HttpService")
-
-	local SCAN_CONTAINERS = {
-		"ReplicatedStorage", "StarterPlayer", "StarterGui",
-		"ReplicatedFirst", "Players"
-	}
-	local SKIP_SERVICES = { CoreGui = true, CorePackages = true }
-	local SKIP_ANIMATE = true
-	local function shouldSkip(obj)
-		if SKIP_SERVICES[obj.Name] then return true end
-		if SKIP_ANIMATE and obj.Name == "Animate" and obj.Parent and obj.Parent:IsA("Player") then return true end
-		return false
-	end
-	local function getSource(obj)
-		if not env.isViableDecompileScript or not env.isViableDecompileScript(obj) then return nil end
-		local ok, src = pcall(env.decompile or function() end, obj)
-		if ok and type(src) == "string" and #src > 0 then return src end
-		return nil
-	end
-	local function searchInContainer(container, query, scriptTypes, maxResults)
-		local results = {}
-		local lowerQuery = query:lower()
-		local function recur(obj)
-			if #results >= maxResults then return end
-			if shouldSkip(obj) then return end
-			local isTarget = false
-			for _, t in pairs(scriptTypes) do
-				if obj:IsA(t) then isTarget = true break end
-			end
-			if isTarget then
-				local src = getSource(obj)
-				if src and src:lower():find(lowerQuery, 1, true) then
-					results[#results+1] = {
-						path = Explorer.GetInstancePath(obj),
-						class = obj.ClassName,
-						snippet = src:sub(1, 300)
-					}
-				end
-			end
-			for _, child in pairs(obj:GetChildren()) do
-				if #results >= maxResults then return end
-				recur(child)
-			end
-		end
-		recur(container)
-		return results
-	end
-	local function searchAll(query, scriptTypes, maxResults)
-		maxResults = maxResults or 20
-		local all = {}
-		for _, svcName in pairs(SCAN_CONTAINERS) do
-			local ok, svc = pcall(function() return game:GetService(svcName) end)
-			if ok and svc then
-				local res = searchInContainer(svc, query, scriptTypes, maxResults - #all)
-				for _, r in pairs(res) do all[#all+1] = r end
-			end
-			if #all >= maxResults then break end
-		end
-		if #all < maxResults then
-			local res = searchInContainer(workspace, query, scriptTypes, maxResults - #all)
-			for _, r in pairs(res) do all[#all+1] = r end
-		end
-		return all
-	end
-
-	local function executeTool(toolName, args)
-		if toolName == "SEARCH_SCRIPTS" then
-			local query = args[1] or ""
-			local tipStr = (args[2] or "local"):lower()
-			local types = {}
-			if tipStr == "local" then types = {"LocalScript"}
-			elseif tipStr == "module" then types = {"ModuleScript"}
-			elseif tipStr == "server" then types = {"Script"}
-			else types = {"LocalScript","ModuleScript","Script"} end
-
-			local results = searchAll(query, types, 15)
-			if #results == 0 then
-				return "No scripts found: `" .. query .. "`"
-			end
-			local lines = {"Found " .. #results .. " scripts:"}
-			for _, r in pairs(results) do
-				lines[#lines+1] = "\n[" .. r.class .. "] " .. r.path
-				lines[#lines+1] = "Snippet:\n" .. r.snippet:sub(1,200) .. "\n---"
-			end
-			return table.concat(lines, "\n")
-
-		elseif toolName == "GET_SOURCE" then
-			local pathStr = args[1] or ""
-			local parts = pathStr:split(".")
-			local obj = game
-			local ok = true
-			for _, part in pairs(parts) do
-				if part == "game" then
-				elseif part:sub(1,11) == "GetService(" then
-					local svcName = part:match('GetService%("(.+)"%)')
-					if svcName then
-						local s, r = pcall(function() return game:GetService(svcName) end)
-						if s then obj = r else ok = false break end
-					end
-				else
-					local child = obj:FindFirstChild(part)
-					if child then obj = child else ok = false break end
-				end
-			end
-			if not ok or obj == game then return "Path not found: " .. pathStr end
-			local src = getSource(obj)
-			if not src then return "Source could not be retrieved (not decompilable or not a script)" end
-			return "```lua\n" .. src:sub(1, 1500) .. (src:len() > 1500 and "\n-- [truncated]" or "") .. "\n```"
-
-		elseif toolName == "LIST_CHILDREN" then
-
-			local svcName = args[1] or "ReplicatedStorage"
-			local ok, svc = pcall(function() return game:GetService(svcName) end)
-			if not ok then return "Service not found: " .. svcName end
-			local children = svc:GetChildren()
-			if #children == 0 then return svcName .. " is empty." end
-			local lines = {svcName .. " contains the following objects (" .. #children .. "):"}
-			for _, c in pairs(children) do
-				lines[#lines+1] = "  [" .. c.ClassName .. "] " .. c.Name
-			end
-			return table.concat(lines, "\n")
-		end
-
-		return "Unknown tool: " .. toolName
-	end
-
-	local function processToolCalls(text)
-		local toolResults = {}
-		for call in text:gmatch("%[TOOL:([^%]]+)%]") do
-			local parts = call:split("|")
-			local toolName = table.remove(parts, 1)
-			local result = executeTool(toolName, parts)
-			toolResults[#toolResults+1] = "**[" .. toolName .. " result]**\n" .. result
-		end
-		local cleanText = text:gsub("%[TOOL:[^%]]+%]", ""):match("^%s*(.-)%s*$")
-		return cleanText, toolResults
-	end
-
-local SYSTEM_PROMPT = [[You are an AI assistant embedded in Dex, a Roblox developer tool.
-You can search scripts in the game using these tools. Write tool calls at the end of your message exactly like this:
-[TOOL:SEARCH_SCRIPTS|search_text|type]   (type: local, module, server, all)
-[TOOL:GET_SOURCE|full.path.here]
-[TOOL:LIST_CHILDREN|ServiceName]
-Explain what you are doing before the tool call. Respond in the same language as the user.]]
-
-local function callAPI(messages)
-	local provider = Settings.AIChat.Provider or "Gemini"
-	local apiKey = Settings.AIChat.APIKey
-	local maxTok = Settings.AIChat.MaxTokens or 8192
-	local temp = Settings.AIChat.Temperature or 0.7
-	local request = env.request
-	if not request then return nil, "request() missing" end
-
-	if provider ~= "Pollinations" and (not apiKey or apiKey == "") then
-		return nil, "API Key not set."
-	end
-
-	local url, headers, body
-
-	if provider == "Claude" then
-		url = "https://api.anthropic.com/v1/messages"
-		headers = {
-			["content-type"] = "application/json",
-			["x-api-key"] = apiKey,
-			["anthropic-version"] = "2023-06-01",
-		}
-		body = HttpService:JSONEncode({
-			model = Settings.AIChat.Model or "claude-sonnet-4-5",
-			max_tokens = maxTok,
-			system = SYSTEM_PROMPT,
-			messages = messages,
-		})
-
-	elseif provider == "OpenAI" then
-		url = "https://api.openai.com/v1/chat/completions"
-		headers = {
-			["content-type"] = "application/json",
-			["Authorization"] = "Bearer " .. apiKey,
-		}
-		local msgs = {{role = "system", content = SYSTEM_PROMPT}}
-		for _, m in pairs(messages) do msgs[#msgs+1] = m end
-		body = HttpService:JSONEncode({
-			model = Settings.AIChat.Model or "gpt-4o-mini",
-			max_tokens = maxTok,
-			temperature = temp,
-			messages = msgs,
-		})
-
-	elseif provider == "Pollinations" then
-		url = "https://text.pollinations.ai/openai"
-		headers = {
-			["content-type"] = "application/json",
-		}
-		local msgs = {{role = "system", content = SYSTEM_PROMPT}}
-		for _, m in pairs(messages) do msgs[#msgs+1] = m end
-		body = HttpService:JSONEncode({
-			model = Settings.AIChat.Model or "openai",
-			max_tokens = maxTok,
-			temperature = temp,
-			messages = msgs,
-		})
-
-	else
-		local model = Settings.AIChat.Model or "gemini-2.5-flash"
-		url = "https://generativelanguage.googleapis.com/v1beta/models/" .. model .. ":generateContent?key=" .. apiKey
-		headers = {
-			["content-type"] = "application/json",
-		}
-
-		local contents = {}
-		for i, m in pairs(messages) do
-			local role = m.role == "assistant" and "model" or "user"
-			local text = m.content
-			if i == 1 and m.role == "user" then
-				text = SYSTEM_PROMPT .. "\n\n---\n\n" .. text
-			end
-			if #contents > 0 and contents[#contents].role == role then
-				contents[#contents].parts[1].text ..= "\n" .. text
-			else
-				contents[#contents+1] = {role = role, parts = {{text = text}}}
-			end
-		end
-
-		body = HttpService:JSONEncode({
-			contents = contents,
-			generationConfig = {maxOutputTokens = maxTok, temperature = temp},
-		})
-	end
-
-	local ok, resp = pcall(request, {Url = url, Method = "POST", Headers = headers, Body = body})
-	if not ok then return nil, "Request failed: " .. tostring(resp) end
-	if resp.StatusCode ~= 200 then return nil, "API error " .. resp.StatusCode .. ": " .. resp.Body:sub(1, 300) end
-
-	local decoded = HttpService:JSONDecode(resp.Body)
-	local text
-
-	if provider == "Claude" then
-		text = decoded.content and decoded.content[1] and decoded.content[1].text
-	elseif provider == "OpenAI" or provider == "Pollinations" then
-		text = decoded.choices and decoded.choices[1] and decoded.choices[1].message and decoded.choices[1].message.content
-	else
-		text = decoded.candidates and decoded.candidates[1] and decoded.candidates[1].content and decoded.candidates[1].content.parts and decoded.candidates[1].content.parts[1] and decoded.candidates[1].content.parts[1].text
-	end
-
-	return text or "Empty response", nil
-end
-
-	local function scrollToBottom()
-		task.defer(function()
-			messageList.CanvasPosition = Vector2.new(0, messageList.AbsoluteCanvasSize.Y)
-		end)
-	end
-
-	local function addMessage(role, text)
-		local isUser = role == "user"
-		local bg = Instance.new("Frame")
-		bg.BackgroundColor3 = isUser and Color3.fromRGB(40,60,90) or Color3.fromRGB(45,45,45)
-		bg.BorderSizePixel = 0
-		bg.Size = UDim2.new(1,0,0,10)
-		bg.AutomaticSize = Enum.AutomaticSize.Y
-		bg.Parent = messageList
-
-		local corner = Instance.new("UICorner", bg)
-		corner.CornerRadius = UDim.new(0,6)
-		local pad = Instance.new("UIPadding", bg)
-		pad.PaddingLeft = UDim.new(0,8) pad.PaddingRight = UDim.new(0,8)
-		pad.PaddingTop = UDim.new(0,6) pad.PaddingBottom = UDim.new(0,6)
-
-		local prefix = isUser and "You: " or "AI: "
-		local lbl = Instance.new("TextLabel", bg)
-		lbl.BackgroundTransparency = 1
-		lbl.Size = UDim2.new(1,0,0,0)
-		lbl.AutomaticSize = Enum.AutomaticSize.Y
-		lbl.Font = Enum.Font.SourceSans
-		lbl.TextSize = 13
-		lbl.TextColor3 = Color3.new(1,1,1)
-		lbl.TextWrapped = true
-		lbl.TextXAlignment = Enum.TextXAlignment.Left
-		lbl.TextYAlignment = Enum.TextYAlignment.Top
-		lbl.Text = prefix .. text
-
-		scrollToBottom()
-		return lbl
-	end
-
-	local function addStatus(text)
-		local lbl = Instance.new("TextLabel", messageList)
-		lbl.BackgroundTransparency = 1
-		lbl.Size = UDim2.new(1,0,0,20)
-		lbl.Font = Enum.Font.SourceSans
-		lbl.TextSize = 12
-		lbl.TextColor3 = Color3.fromRGB(150,150,150)
-		lbl.TextWrapped = true
-		lbl.TextXAlignment = Enum.TextXAlignment.Center
-		lbl.Text = text
-		scrollToBottom()
-		return lbl
-	end
-
-local abortFlag = false
-
-local function sendMessage(userText)
-    if isProcessing then
-        abortFlag = true
-        return
-    end
-    if userText == "" then return end
-    isProcessing = true
-    abortFlag = false
-
-    addMessage("user", userText)
-    conversationHistory[#conversationHistory+1] = {role="user", content=userText}
-
-    local statusLbl = addStatus("AI is thinking...")
-
-    local aiText, err = callAPI(conversationHistory)
-
-    if abortFlag then
-        statusLbl:Destroy()
-        isProcessing = false
-        abortFlag = false
-        return
-    end
-
-    if err then
-        statusLbl:Destroy()
-        addMessage("assistant", "Error: " .. err)
-        isProcessing = false
-        return
-    end
-
-    local cleanText, toolResults = processToolCalls(aiText)
-
-    if #toolResults > 0 then
-        statusLbl.Text = "Scanning scripts..."
-        local toolContext = table.concat(toolResults, "\n\n")
-        conversationHistory[#conversationHistory+1] = {role="assistant", content=aiText}
-        conversationHistory[#conversationHistory+1] = {role="user", content="[Tool results]\n" .. toolContext .. "\n\nAnswer based on these results."}
-
-        local finalText, err2 = callAPI(conversationHistory)
-        statusLbl:Destroy()
-        if abortFlag then
-            isProcessing = false
-            abortFlag = false
-            return
-        end
-        if err2 then
-            addMessage("assistant", "Error: " .. err2)
-        else
-            local finalClean = finalText:gsub("%[TOOL:[^%]]+%]",""):match("^%s*(.-)%s*$")
-            conversationHistory[#conversationHistory+1] = {role="assistant", content=finalClean}
-            addMessage("assistant", finalClean)
-        end
-    else
-        statusLbl:Destroy()
-        if cleanText and #cleanText > 0 then
-            conversationHistory[#conversationHistory+1] = {role="assistant", content=cleanText}
-            addMessage("assistant", cleanText)
-        end
-    end
-
-    isProcessing = false
-end
-
-	AIChat.Init = function()
-		window = Lib.Window.new()
-		window:SetTitle("AI Chat")
-		window:Resize(520, 450)
-		AIChat.Window = window
-
-		local content = window.GuiElems.Content
-
-		local listFrame = Instance.new("ScrollingFrame", content)
-		listFrame.Name = "MessageList"
-		listFrame.Size = UDim2.new(1,0,1,-38)
-		listFrame.Position = UDim2.new(0,0,0,0)
-		listFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-		listFrame.BorderSizePixel = 0
-		listFrame.CanvasSize = UDim2.new(0,0,0,0)
-		listFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-		listFrame.ScrollBarThickness = 8
-		listFrame.ScrollBarImageColor3 = Color3.fromRGB(80,80,80)
-
-		local layout = Instance.new("UIListLayout", listFrame)
-		layout.Padding = UDim.new(0,6)
-		local lpad = Instance.new("UIPadding", listFrame)
-		lpad.PaddingLeft = UDim.new(0,6) lpad.PaddingRight = UDim.new(0,6)
-		lpad.PaddingTop = UDim.new(0,6) lpad.PaddingBottom = UDim.new(0,6)
-
-		messageList = listFrame
-
-		local inputBar = Instance.new("Frame", content)
-		inputBar.Size = UDim2.new(1,0,0,36)
-		inputBar.Position = UDim2.new(0,0,1,-36)
-		inputBar.BackgroundColor3 = Color3.fromRGB(40,40,40)
-		inputBar.BorderSizePixel = 0
-
-		inputBox = Instance.new("TextBox", inputBar)
-		inputBox.Size = UDim2.new(1,-100,1,-8)
-		inputBox.Position = UDim2.new(0,4,0,4)
-		inputBox.BackgroundColor3 = Color3.fromRGB(55,55,55)
-		inputBox.BorderSizePixel = 0
-		inputBox.Text = ""
-		inputBox.TextColor3 = Color3.new(1,1,1)
-		inputBox.PlaceholderText = "Ask a question..."
-		inputBox.PlaceholderColor3 = Color3.fromRGB(120,120,120)
-		inputBox.Font = Enum.Font.SourceSans
-		inputBox.TextSize = 13
-		inputBox.TextXAlignment = Enum.TextXAlignment.Left
-		inputBox.ClearTextOnFocus = false
-		local ipad = Instance.new("UIPadding", inputBox)
-		ipad.PaddingLeft = UDim.new(0,6)
-		local icorner = Instance.new("UICorner", inputBox)
-		icorner.CornerRadius = UDim.new(0,4)
-
-		local sendBtn = Instance.new("TextButton", inputBar)
-		sendBtn.Size = UDim2.new(0,54,1,-8)
-		sendBtn.Position = UDim2.new(1,-58,0,4)
-		sendBtn.BackgroundColor3 = Color3.fromRGB(0,120,200)
-		sendBtn.BorderSizePixel = 0
-		sendBtn.Font = Enum.Font.SourceSansBold
-		sendBtn.TextSize = 13
-		sendBtn.TextColor3 = Color3.new(1,1,1)
-		sendBtn.Text = "Send"
-		local sbcorner = Instance.new("UICorner", sendBtn)
-		sbcorner.CornerRadius = UDim.new(0,4)
-
-		local attachBtn = Instance.new("TextButton", inputBar)
-		attachBtn.Size = UDim2.new(0,30,1,-8)
-		attachBtn.Position = UDim2.new(0,inputBox.Position.X.Offset + inputBox.Size.X.Offset + 2, 0, 4)
-		attachBtn.BackgroundColor3 = Color3.fromRGB(55,55,55)
-		attachBtn.BorderSizePixel = 0
-		attachBtn.Font = Enum.Font.SourceSansBold
-		attachBtn.TextSize = 14
-		attachBtn.TextColor3 = Color3.new(1,1,1)
-		attachBtn.Text = "📎"
-		local acorner = Instance.new("UICorner", attachBtn)
-		acorner.CornerRadius = UDim.new(0,4)
-
-local function doSend()
-    local txt = inputBox.Text:match("^%s*(.-)%s*$")
-    if isProcessing then
-        abortFlag = true
-        sendBtn.Text = "Send"
-        return
-    end
-    inputBox.Text = ""
-    sendBtn.Text = "■"
-    task.spawn(function()
-        sendMessage(txt)
-        sendBtn.Text = "Send"
-    end)
-end
-
-		sendBtn.MouseButton1Click:Connect(doSend)
-		inputBox.FocusLost:Connect(function(enter)
-			if enter then doSend() end
-		end)
-
-		attachBtn.MouseButton1Click:Connect(function()
-    if not Explorer or not Explorer.Selection then
-        addMessage("assistant", "Explorer not available.")
-        return
-    end
-    local node = Explorer.Selection.List[1]
-    if not node then
-        addMessage("assistant", "No instance selected in Explorer.")
-        return
-    end
-    local obj = node.Obj
-    if not obj:IsA("LuaSourceContainer") then
-        addMessage("assistant", "Selected instance is not a script.")
-        return
-    end
-    local src = getSource(obj)
-    if not src or src == "" then
-        addMessage("assistant", "Could not decompile: " .. obj.Name)
-        return
-    end
-    local fname = obj.Name .. ".lua"
-    local sizeTxt = src and (#src < 1024 and #src.."B" or string.format("%.1f",#src/1024).."KB") or "?"
-    addMessage("user", "📄 " .. fname .. " · " .. sizeTxt)
-    conversationHistory[#conversationHistory+1] = {
-        role="user",
-        content="[Attached script: " .. fname .. "]\n```lua\n" .. src:sub(1,6000) .. (src:len()>6000 and "\n-- [truncated]" or "") .. "\n```"
-    }
-    if ScriptViewer and ScriptViewer.Window then
-        task.defer(function()
-            ScriptViewer.Window:SetTitle(fname)
-            ScriptViewer.Window:Show()
-        end)
-    end
-end)
-window.OnActivate:Connect(function()
-    isProcessing = false
-    abortFlag = false
-end)
-		addMessage("assistant", "Hello! I can help you analyze the Roblox game structure.\n\nExample questions:\n• 'Where was this remote event \"<event_name>\" used?'\n• 'What's in ReplicatedStorage?'\n• 'Show me the source of game.Players.LocalPlayer.PlayerScripts.Main'")
-	end
-
-	return AIChat
-end
-
 return {InitDeps = initDeps, InitAfterMain = initAfterMain, Main = main}
 end,
 }
-local oldgame = oldgame or game
-
-cloneref = cloneref or function(ref)
-	if not getreg then return ref end
-	
-	local InstanceList
-	
-	local a = Instance.new("Part")
-	for _, c in pairs(getreg()) do
-		if type(c) == "table" and #c then
-			if rawget(c, "__mode") == "kvs" then
-				for d, e in pairs(c) do
-					if e == a then
-						InstanceList = c
-						break
-					end
-				end
-			end
-		end
-	end
-	local f = {}
-	function f.invalidate(g)
-		if not InstanceList then
-			return
-		end
-		for b, c in pairs(InstanceList) do
-			if c == g then
-				InstanceList[b] = nil
-				return g
-			end
-		end
-	end
-	return f.invalidate
-end
+--// main
 
 local isFsSupported = readfile and writefile and isfile and isfolder and listfiles and delfile and delfolder
 
@@ -14793,7 +14350,7 @@ DefaultSettings = (function()
 			_Recurse = true,
 			Sorting = true,
 			TeleportToOffset = Vector3.new(0,0,0),
-			ClickToRename = true,
+			DraggablePill = true,
 			AutoUpdateSearch = true,
 			AutoUpdateMode = 0, -- 0 Default, 1 no tree update, 2 no descendant events, 3 frozen
 			PartSelectionBox = true,
@@ -14803,12 +14360,12 @@ DefaultSettings = (function()
 		Properties = {
 			_Recurse = true,
 			MaxConflictCheck = 50,
-			ShowDeprecated = false,
+			ShowDeprecated = true,
 			ShowHidden = false,
-			ClearOnFocus = false,
 			LoadstringInput = true,
 			NumberRounding = 3,
 			ShowAttributes = true,
+			ShowTags = true,
 			MaxAttributes = 50,
 			ScaleType = 0 -- 0 Full Name Shown, 1 Equal Halves
 		},
@@ -14862,21 +14419,16 @@ DefaultSettings = (function()
 		},
 		Window = {
 			TitleOnMiddle = false,
-			Transparency = .2
+			Transparency = 0
+		},
+		Assets = {
+			_Recurse = true,
+			UseGetCustomAsset = true
 		},
 		Decompiler = {
-			DecompilerFallback = "Lua Expert", --Lua Expert, DecompilerLol, Shiny, x2125, Oracle, Konstant
+			DecompilerFallback = nil,
 			PreferDecompilerFallback = false,
-			StripHeader = true,
-			ShinyDecompilerPort = 3000,
-		},
-		AIChat = {
-			_Recurse = true,
-			APIKey = "",
-			Provider = "Gemini", -- Claude, OpenAI, Gemini, polli
-			Model = "gemini-2.5-flash",
-			MaxTokens = 8192,
-			Temperature = 0.7,
+			StripDecompilerHeader = true
 		},
 		
 		RemoteBlockWriteAttribute = false, -- writes attribute to remote instance if remote is blocked/unblocked
@@ -14929,11 +14481,11 @@ end
 Main = (function()
 	local Main = {}
 
-	Main.ModuleList = {"Explorer","Properties","ScriptViewer","Console","SaveInstance","ModelViewer","SettingsWindow","AIChat"}
+	Main.ModuleList = {"Explorer","Properties","ScriptViewer","Console","SaveInstance","ModelViewer","SettingsWindow"}
 	Main.Elevated = false
 	Main.AllowDraggableOnMobile = true
 	Main.MissingEnv = {}
-	Main.Version = "3.5"
+	Main.Version = ""
 	Main.Mouse = plr:GetMouse()
 	Main.AppControls = {}
 	Main.Apps = Apps
@@ -14950,6 +14502,26 @@ Main = (function()
 	}
 	
 	Main.Plugins = {}
+	Main.TrackedConnections = {}
+	Main.IsUninitialized = false
+
+	Main.TrackConnection = function(connection)
+		if connection then
+			table.insert(Main.TrackedConnections, connection)
+		end
+		return connection
+	end
+
+	Main.DisconnectConnection = function(connection)
+		if not connection then return end
+		connection:Disconnect()
+		for index = #Main.TrackedConnections, 1, -1 do
+			if Main.TrackedConnections[index] == connection then
+				table.remove(Main.TrackedConnections, index)
+				break
+			end
+		end
+	end
 	
 	--[[Main.LoadAdonisBypass = function()
 		-- skidded off reddit :pensive:
@@ -15027,7 +14599,6 @@ Main = (function()
 	
 	Main.GetSecureContainer = function()
 		return
-			syn and syn.protect_gui or
 			gethui and gethui() or
 			service.CoreGui or
 			service.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -15075,7 +14646,7 @@ Main = (function()
 	end
 
 	Main.Error = function(str)
-		warn("DEX ERROR: "..tostring(str))
+		warn("DEX ERROR: "..tostring(str).."\n")
 		Main.Reinit()
 	end
 
@@ -15182,7 +14753,6 @@ Main = (function()
 		ModelViewer = Apps.ModelViewer
 		Notebook = Apps.Notebook
 		SettingsWindow = Apps.SettingsWindow
-		AIChat = Apps.AIChat
 		
 		
 		--SecretServicePanel = Apps.SecretServicePanel
@@ -15194,8 +14764,7 @@ Main = (function()
 			SaveInstance = SaveInstance,
 			ModelViewer = ModelViewer,
 			Notebook = Notebook,
-			SettingsWindow = SettingsWindow,
-			AIChat = AIChat
+			SettingsWindow = SettingsWindow
 			--SecretServicePanel = SecretServicePanel,
 		}
 		
@@ -15273,7 +14842,17 @@ Main = (function()
 		env.setclipboard = setclipboard
 		env.getnilinstances = getnilinstances or get_nil_instances
 		env.getloadedmodules = getloadedmodules
-		
+
+		--cryptoo
+
+		env.base64encode = (function(s: string): string?
+			local fn = (crypt and crypt.base64encode) or base64encode
+			if fn then return fn(s) end
+			if not service.EncodingService then return end
+			local ok, res = pcall(function()return buffer.tostring(service.EncodingService:Base64Encode(buffer.fromstring(s)))end)
+			return if ok then res else nil
+		end)
+
 		env.isViableDecompileScript = function(obj)
 			if obj:IsA("ModuleScript") then
 				return true
@@ -15295,178 +14874,64 @@ Main = (function()
 		end
 		
 		
-local httpservice = cloneref and cloneref(game:GetService("HttpService")) or game:GetService("HttpService")
+		--// decompile
 
-local function b64encode(data)
-	local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-	return ((data:gsub('.', function(x)
-		local r, byte = '', x:byte()
-		for i = 8, 1, -1 do
-			r ..= byte % 2^i - byte % 2^(i-1) > 0 and '1' or '0'
+		local HttpService = service.HttpService
+		local b64 = env.base64encode
+		local last = 0
+
+		local function DecompileError(msg: string, detail: string?): string
+			return if detail then `-- {msg}\n--[[\n{detail}\n--]]` else `-- {msg}`
 		end
-		return r
-	end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
-		if #x < 6 then return '' end
-		local c = 0
-		for i = 1, 6 do
-			c += x:sub(i,i) == '1' and 2^(6-i) or 0
+
+		local function StripDecompilerHeader(src: string): string
+			if typeof(src) ~= "string" or not Settings.Decompiler.StripDecompilerHeader then return src end
+			src = src:gsub("%-%-[^\r\n]*[Dd]ecompil[^\r\n]*\r?\n?", "")
+			src = src:gsub("%-%-[^\r\n]*https?://[^\r\n]*\r?\n?", "")
+			return src
 		end
-		return b:sub(c+1,c+1)
-	end)..({'','==','='})[#data % 3 + 1])
-end
 
-local function stripheader(src)
-	if not Settings.Decompiler.StripHeader then return src end
-	return (src:gsub("^%-%-[^\n]*\n", ""))
-end
-
-local konstant_last_call = 0
-local function KonstantDec(s)
-	local ok, bytecode = pcall(env.getscriptbytecode, s)
-	if not ok then
-		return `-- Failed to get script bytecode\n--[[\n{bytecode}\n--]]`
-	end
-	local elapsed = os.clock() - konstant_last_call
-	if elapsed <= 0.5 then task.wait(0.5 - elapsed) end
-	local res = env.request({
-		Url = "http://api.plusgiant5.com/konstant/decompile",
-		Body = bytecode,
-		Method = "POST",
-		Headers = {["Content-Type"] = "text/plain"}
-	})
-	konstant_last_call = os.clock()
-	if res.StatusCode ~= 200 then
-		return `-- Konstant API error\n--[[\n{res.Body}\n--]]`
-	end
-	return stripheader(res.Body)
-end
-
-local function ShinyDec(s)
-	if typeof(crypt) ~= "table" then return "-- 'crypt' library is missing!" end
-	local ok = pcall(function() game:HttpGet("http://127.0.0.1:"..tostring(Settings.Decompiler.ShinyDecompilerPort)) end)
-	if not ok then return "-- Shiny decompiler is not active or port is wrong!" end
-	return stripheader(env.request({
-		Url = "http://127.0.0.1:"..tostring(Settings.Decompiler.ShinyDecompilerPort).."/luau/decompile",
-		Method = "POST",
-		Body = crypt.base64encode(getscriptbytecode(s))
-	}).Body)
-end
-
-local luaexpert_last_call = 0
-local function LuaExpertDec(s)
-	local ok, bytecode = pcall(env.getscriptbytecode, s)
-	if not ok then
-		return `-- failed to read script bytecode\n--[[\n{bytecode}\n--]]`
-	end
-	local elapsed = os.clock() - luaexpert_last_call
-	if elapsed < 0.12 then task.wait(0.12 - elapsed) end
-	local res = env.request({
-		Url = "https://api.lua.expert/decompile",
-		Method = "POST",
-		Headers = {["content-type"] = "application/json"},
-		Body = httpservice:JSONEncode({script = b64encode(bytecode)})
-	})
-	luaexpert_last_call = os.clock()
-	if not res or res.StatusCode ~= 200 then
-		return `-- api request error\n--[[\n{res and res.Body or "no response"}\n--]]`
-	end
-	return stripheader(res.Body)
-end
-
-local function DecompilerLolDec(s)
-	local ok, bytecode = pcall(env.getscriptbytecode, s)
-	if not ok then
-		return `-- decompiler.lol | Failed to get bytecode for {s.Name}`
-	end
-	local res = env.request({
-		Url = "https://www.decompiler.lol/api/decompile",
-		Method = "POST",
-		Headers = {["Content-Type"] = "application/json"},
-		Body = httpservice:JSONEncode({
-			target = "luau",
-			mode = "decompile",
-			bytecodeBase64 = b64encode(bytecode),
-		})
-	})
-	if not res or not res.Body then return "-- decompiler.lol | No response body" end
-	local dok, parsed = pcall(httpservice.JSONDecode, httpservice, res.Body)
-	if not dok then return "-- decompiler.lol | Invalid JSON response" end
-	if not parsed.ok then
-		return `-- decompiler.lol | [{parsed.stage or "?"}] {parsed.error or "unknown error"}`
-	end
-	return stripheader(parsed.output)
-end
-
-local function X2125Dec(s)
-	local ok, bytecode = pcall(env.getscriptbytecode, s)
-	if not ok then
-		return `-- x2125 | Failed to get bytecode for {s.Name}`
-	end
-	local res = env.request({
-		Url = "https://x2125.xyz/decompile",
-		Method = "POST",
-		Headers = {["Content-Type"] = "application/json"},
-		Body = httpservice:JSONEncode({
-			script = b64encode(bytecode),
-			options = {
-				renamingType = "INFER",
-				upvalueComment = true,
-				lineDefinedComment = true,
-			}
-		})
-	})
-	if not res or res.StatusCode ~= 200 then
-		return `-- x2125 | HTTP {res and res.StatusCode or "no response"}`
-	end
-	local dok, decoded = pcall(httpservice.JSONDecode, httpservice, res.Body)
-	if dok and type(decoded) == "table" and type(decoded.data) == "string" then
-		return stripheader(decoded.data)
-	end
-	return "-- x2125 | invalid server response"
-end
-
-local function OracleDec(s)
-	local ok, bytecode = pcall(env.getscriptbytecode, s)
-	if not ok then
-		return "-- oracle | failed to get bytecode"
-	end
-	local res = env.request({
-		Url = "https://oracle.mshq.dev/v1/decompile?version=" .. tostring(Settings.Decompiler.OracleVersion or 2),
-		Method = "POST",
-		Headers = {
-			["Authorization"] = "Bearer " .. (Settings.Decompiler.OracleAPIKey or ""),
-			["Content-Type"] = "application/json"
-		},
-		Body = httpservice:JSONEncode({
-			script = crypt.base64encode(bytecode)
-		})
-	})
-	if res.StatusCode == 200 then
-		return stripheader(res.Body)
-	end
-	return `-- oracle | decompile failed ({res.StatusCode})\n{res.Body}`
-end
-
-env.decompile = function(...)
-	if typeof(decompile) == "function" and Settings.Decompiler.PreferDecompilerFallback == false then
-		return decompile(...)
-	elseif typeof(getscriptbytecode) == "function" then
-		local fallbackMode = Settings.Decompiler.DecompilerFallback
-		if fallbackMode == "Konstant" then
-			return KonstantDec(...)
-		elseif fallbackMode == "Oracle" then
-			return OracleDec(...)
-		elseif fallbackMode == "Shiny" then
-			return ShinyDec(...)
-		elseif fallbackMode == "Lua Expert" then
-			return LuaExpertDec(...)
-		elseif fallbackMode == "DecompilerLol" then
-			return DecompilerLolDec(...)
-		elseif fallbackMode == "x2125" then
-			return X2125Dec(...)
+		local function Request(url: string, body: string, ctype: string)
+			return env.request({ Url = url, Method = "POST", Headers = { ["Content-Type"] = ctype }, Body = body })
 		end
-	end
-end
+
+		env.decompile = function(scr: Instance, mode: string?): string
+			local ok, bytecode = pcall(getscriptbytecode, scr)
+			if not ok then return DecompileError("failed to read script bytecode", tostring(bytecode)) end
+			local elapsed = os.clock() - last
+			if elapsed < 0.04 then task.wait(0.04 - elapsed) end
+			mode = mode or Settings.Decompiler.DecompilerFallback
+			if not mode or (typeof(decompile) == "function" and not Settings.Decompiler.PreferDecompilerFallback) then
+				return StripDecompilerHeader(decompile(scr))
+			end
+			local res, dok, decoded, parsed
+			if mode == "luaexpert" then
+				res = Request("https://api.lua.expert/decompile", HttpService:JSONEncode({ script = b64(bytecode) }), "application/json")
+				last = os.clock()
+				if not res or res.StatusCode ~= 200 then return DecompileError("luaexpert api error", res and res.Body or "no response") end
+				return StripDecompilerHeader(res.Body)
+			elseif mode == "luacid" then
+				res = Request("https://api.luacid.dev/decompile", bytecode, "application/octet-stream")
+				last = os.clock()
+				if not res or res.StatusCode ~= 200 then return DecompileError("luacid api error", res and res.Body or "no response") end
+				return StripDecompilerHeader(res.Body)
+			elseif mode == "x2125" then
+				res = Request("https://x2125.xyz/decompile", HttpService:JSONEncode({ script = b64(bytecode), options = { renamingType = "INFER", upvalueComment = true, lineDefinedComment = true } }), "application/json")
+				last = os.clock()
+				if not res or res.StatusCode ~= 200 then return DecompileError("x2125 api error", res and res.Body or "no response") end
+				dok, decoded = pcall(HttpService.JSONDecode, HttpService, res.Body)
+				if not dok or type(decoded) ~= "table" or type(decoded.data) ~= "string" then return DecompileError("x2125 invalid response", res.Body) end
+				return StripDecompilerHeader(decoded.data)
+			elseif mode == "sabre" then
+				res = Request("https://www.decompiler.lol/api/decompile", HttpService:JSONEncode({ target = "luau", mode = "decompile", bytecodeBase64 = b64(bytecode) }), "application/json")
+				last = os.clock()
+				if not res or not res.Body then return DecompileError("sabre no response") end
+				dok, parsed = pcall(HttpService.JSONDecode, HttpService, res.Body)
+				if not dok or not parsed.ok then return DecompileError("sabre api error", parsed and parsed.error or res.Body) end
+				return StripDecompilerHeader(parsed.output or "")
+			end
+			return DecompileError("unknown decompiler mode: " .. tostring(mode))
+		end
 
 		if identifyexecutor then
 			Main.Executor = identifyexecutor()
@@ -15476,68 +14941,6 @@ end
 
 		setmetatable(env,nil)
 	end
-
-	--[[Main.IncompatibleTest = function()
-		local function incompatibleMessage(reason, tolerated)
-			local msg = Instance.new("ScreenGui")
-			msg.IgnoreGuiInset = true
-
-			local t = Instance.new("TextLabel",msg)
-			t.BackgroundColor3 = Color3.fromRGB(50,50,50)
-			t.Position = UDim2.new(0,0,0,0)
-			t.Size = UDim2.new(1,0,1,0)
-			t.TextColor3 = Color3.new(1,1,1)
-			t.TextWrapped = true
-			t.TextScaled = true
-			t.Text = "\n\n\n\n\n\n\n\nHello Skidsploit user,\nZinnia, Chillz and the Secret Service does not approve of Dex being used on your skidsploit.\nPlease consider getting something better.\n\nIncompatible Reason: "..reason.."\n\n\n\n\n\n\n\n"
-			
-			-- This sound wont work!!!
-			local sound = Instance.new("Sound",msg)
-			sound.SoundId = "rbxassetid://175964948"
-			sound.Volume = 1
-			sound.Looped = true
-			sound.Playing = true
-			
-			if not tolerated then
-				Lib.ShowGui(msg)
-				
-				if os and os.execute then pcall(os.execute,'explorer "https://weao.xyz"') end
-				if pcall(game.GetService, game,"MessageBusService") and game:GetService("MessageBusService").Publish then pcall(game:GetService("MessageBusService").Publish, game:GetService("MessageBusService"), game:GetService("MessageBusService"):GetMessageId("Linking", "openURLRequest"), {url = 'explorer "https://weao.xyz"'}) end
-			else
-				warn(msg)
-			end			
-		end
-		
-																																													local yummy, evilList = "\105\100\101\110\116\105\102\121\101\120\101\99\117\116\111\114", { "\120\101\110\111", "\115\111\108\97\114\97", "\119\97\118\101" }
-																																													if ggv and ggv()[yummy] then local wow = ggv()[yummy] if table.find(evilList, string.lower(wow)) then incompatibleMessage("\83\72\73\84\84\89\32\69\88\69\67\85\84\79\82") end end
-																																													
-		local t = {}
-		t[1] = t
-		local x = unpack(t) or incompatibleMessage("WRAPPER FAILED TO CYCLIC #1")
-		if x[1] ~= t then incompatibleMessage("WRAPPER FAILED TO CYCLIC #2") end
-		
-		if game ~= workspace.Parent then
-			incompatibleMessage("WRAPPER NO CACHE (game ≠ workspace.Parent)", true)
-			game = workspace.Parent
-		end
-		
-		if Main.Elevated and not loadstring("for i = 1,1 do continue end") then incompatibleMessage("CAN'T CONTINUE OR NO LOADSTRING")end
-		
-		local obj = newproxy(true)
-		local mt = getmetatable(obj)
-		mt.__index = function() incompatibleMessage("CAN'T NAMECALL (__index triggered instead of __namecall)") end
-		mt.__namecall = function() end
-		obj:No()
-		
-		local fEnv = setmetatable({zin = 5},{__index = getfenv()})
-		local caller = function(f) f() end
-		setfenv(caller,fEnv)
-		caller(function() if not getfenv(2).zin then incompatibleMessage("RERU WILL BE FILING A LAWSUIT AGAINST YOU SOON") end end)
-		
-		local second = false
-		coroutine.wrap(function() local start = tick() wait(5) if tick() - start < 0.1 or not second then incompatibleMessage("SKIDDED YIELDING") end end)()
-		second = true
-	end]]
 	
 	local function serialize(val)
 		if typeof(val) == "Color3" then
@@ -15591,7 +14994,7 @@ end
 	--warn(Main.ExportSettings())
 
 	Main.LoadSettings = function()
-		local s, data = pcall(env.readfile or error, "DexPlusPlusSettings.json")
+		local s, data = pcall(env.readfile or error, "adex/settings.json")
 		if s and data and data ~= "" then
 			
 			local s, decoded = pcall(service.HttpService.JSONDecode, service.HttpService, data)
@@ -15644,15 +15047,157 @@ end
 	Main.FetchAPI = function(callbackiflong, callbackiftoolong, XD)
 		local downloaded = false
 		local api,rawAPI
-		if Main.Elevated then
-			if Main.LocalDepsUpToDate() then
-				local localAPI = Lib.ReadFile("dex/rbx_api.dat")
-				if localAPI then 
-					rawAPI = localAPI
-				else
-					Main.DepsVersionData[1] = ""
+		local cachedAPIs = {}
+		Main.APIFromCache = false
+		local function readDependencyCaches(fileName)
+			local caches = {}
+			for _,path in ipairs({"adex/"..fileName,"dex/"..fileName,"m/"..fileName}) do
+				local contents = Lib.ReadFile(path)
+				if contents then caches[#caches+1] = contents end
+			end
+			return caches
+		end
+
+		local function decodeAPIDump(raw)
+			local decoded
+			if type(raw) == "table" then
+				decoded = raw
+			elseif type(raw) ~= "string" then
+				return nil, "API dump is not a string"
+			else
+				local success,result = pcall(function()
+					return service.HttpService:JSONDecode(raw)
+				end)
+				if not success then
+					return nil, tostring(result)
+				end
+				decoded = result
+			end
+			if type(decoded) ~= "table" then
+				return nil, "API dump root is not a table"
+			end
+			if type(decoded.Classes) == "table" and type(decoded.Enums) == "table" then
+				return decoded
+			end
+			if #decoded == 0 then
+				return nil, "API dump is missing Classes or Enums and has no flat entries"
+			end
+
+			local function normalizeTags(tags)
+				local normalized = {}
+				for _,tag in ipairs(tags or {}) do
+					if type(tag) == "string" then
+						normalized[#normalized+1] = ({
+							deprecated = "Deprecated",
+							hidden = "Hidden",
+							readonly = "ReadOnly",
+							writeonly = "WriteOnly",
+							notCreatable = "NotCreatable",
+							notbrowsable = "NotBrowsable"
+						})[tag] or tag
+					end
+				end
+				return normalized
+			end
+
+			local flatClasses,flatEnums = {},{}
+			for _,entry in ipairs(decoded) do
+				if type(entry) ~= "table" then
+					return nil, "Flat API dump contains a non-table entry"
+				elseif entry.type == "Class" and type(entry.Name) == "string" then
+					flatClasses[entry.Name] = {
+						Name = entry.Name,
+						Superclass = entry.Superclass,
+						Tags = normalizeTags(entry.tags),
+						Members = {}
+					}
+				elseif entry.type == "Enum" and type(entry.Name) == "string" then
+					flatEnums[entry.Name] = {
+						Name = entry.Name,
+						Tags = normalizeTags(entry.tags),
+						Items = {}
+					}
 				end
 			end
+
+			if not next(flatClasses) or not next(flatEnums) then
+				return nil, "Flat API dump does not contain both classes and enums"
+			end
+
+			for _,entry in ipairs(decoded) do
+				if entry.type == "EnumItem" then
+					local enum = flatEnums[entry.Enum]
+					if enum then
+						enum.Items[#enum.Items+1] = {
+							Name = entry.Name,
+							Value = entry.Value,
+							Tags = entry.tags or {}
+						}
+					end
+				elseif entry.type ~= "Class" and entry.type ~= "Enum" then
+					local class = flatClasses[entry.Class]
+					if class and type(entry.Name) == "string" then
+						local memberType = entry.type
+						if memberType == "YieldFunction" then
+							memberType = "Function"
+						end
+
+						local tags = {}
+						local security
+						for _,tag in ipairs(entry.tags or {}) do
+							if type(tag) == "string" then
+								local normalizedTags = normalizeTags({tag})
+								tags[#tags+1] = normalizedTags[1]
+								if tag:find("Security",1,true) or tag:find("ScriptWriteRestricted",1,true) then
+									security = tag
+								end
+							end
+						end
+
+						local member = {
+							Name = entry.Name,
+							MemberType = memberType,
+							Tags = tags,
+							Security = security
+						}
+						if memberType == "Property" then
+							local valueType = entry.ValueType
+							if type(valueType) ~= "string" then
+								return nil, "Flat API property is missing its value type"
+							end
+							local valueCategory = "DataType"
+							if valueType == "Object" then
+								valueType = "Instance"
+								valueCategory = "Class"
+							elseif flatClasses[valueType] then
+								valueCategory = "Class"
+							elseif flatEnums[valueType] then
+								valueCategory = "Enum"
+							end
+							member.ValueType = {Name = valueType, Category = valueCategory}
+							member.Category = "Other"
+						elseif memberType == "Function" or memberType == "Event" or memberType == "Callback" then
+							member.ReturnType = {Name = entry.ReturnType or "void"}
+							member.Parameters = {}
+							for _,argument in ipairs(entry.Arguments or {}) do
+								member.Parameters[#member.Parameters+1] = {
+									Name = argument.Name,
+									Type = {Name = argument.Type or "any"}
+								}
+							end
+						else
+							return nil, "Flat API dump contains an unsupported member type: "..tostring(memberType)
+						end
+						class.Members[#class.Members+1] = member
+					end
+				end
+			end
+
+			return {Classes = flatClasses, Enums = flatEnums}
+		end
+
+		if Main.Elevated then
+			cachedAPIs = readDependencyCaches("rbx_api.dat")
 			task.spawn(function()
 				task.wait(10)
 				if not downloaded and callbackiflong then callbackiflong() end
@@ -15663,19 +15208,69 @@ end
 				task.wait(30) -- 60
 				if not downloaded and XD then XD() end
 			end)
-			-- lmfao async makes it work to load big file
-			rawAPI = rawAPI or game:HttpGet("http://setup.roblox.com/"..Main.RobloxVersion.."-API-Dump.json")
+
+			if Main.RobloxVersion then
+				local requestSuccess,downloadedAPI = pcall(function()
+					return game:HttpGet("http://setup.roblox.com/"..Main.RobloxVersion.."-API-Dump.json")
+				end)
+				if requestSuccess then
+					local downloadedData,decodeError = decodeAPIDump(downloadedAPI)
+					if downloadedData then
+						rawAPI = downloadedAPI
+						api = downloadedData
+					else
+						warn("AlwaysDex: setup.roblox.com API dump is invalid: "..tostring(decodeError))
+					end
+				else
+					warn("AlwaysDex: Failed to download API dump from setup.roblox.com: "..tostring(downloadedAPI))
+				end
+			else
+				warn("AlwaysDex: Skipping setup.roblox.com because the Roblox client version is unavailable")
+			end
+
+			if not api then
+				local requestSuccess,downloadedAPI = pcall(function()
+					return game:HttpGet("https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/Full-API-Dump.json")
+				end)
+				if requestSuccess then
+					local downloadedData,decodeError = decodeAPIDump(downloadedAPI)
+					if downloadedData then
+						rawAPI = downloadedAPI
+						api = downloadedData
+					else
+						warn("AlwaysDex: GitHub API dump is invalid: "..tostring(decodeError))
+					end
+				else
+					warn("AlwaysDex: Failed to download API dump from GitHub: "..tostring(downloadedAPI))
+				end
+			end
+
+			if not api then
+				for _,cachedAPI in ipairs(cachedAPIs) do
+					local cachedData,cachedError = decodeAPIDump(cachedAPI)
+					if cachedData then
+						rawAPI = cachedAPI
+						api = cachedData
+						Main.APIFromCache = true
+						break
+					else
+						warn("AlwaysDex: Cached Roblox API dump is invalid: "..tostring(cachedError))
+					end
+				end
+			end
 		else
 			if script:FindFirstChild("API") then
 				rawAPI = require(script.API)
-			else
-				error("NO API EXISTS")
 			end
 		end
-		downloaded = true
 		
+		if not api then
+			downloaded = true
+			return nil, "Failed to get API"
+		end
+		downloaded = true
+
 		Main.RawAPI = rawAPI
-		api = service.HttpService:JSONDecode(rawAPI)
 
 		local classes,enums = {},{}
 		local categoryOrder,seenCategories = {},{}
@@ -15700,14 +15295,14 @@ end
 			newClass.Callbacks = {}
 			newClass.Tags = {}
 
-			if class.Tags then for c,tag in pairs(class.Tags) do newClass.Tags[tag] = true end end
-			for __,member in pairs(class.Members) do
+			if class.Tags then for _,tag in pairs(class.Tags) do if type(tag) == "string" then newClass.Tags[tag] = true end end end
+			for __,member in pairs(class.Members or {}) do
 				local newMember = {}
 				newMember.Name = member.Name
 				newMember.Class = class.Name
 				newMember.Security = member.Security
 				newMember.Tags ={}
-				if member.Tags then for c,tag in pairs(member.Tags) do newMember.Tags[tag] = true end end
+				if member.Tags then for _,tag in pairs(member.Tags) do if type(tag) == "string" then newMember.Tags[tag] = true end end end
 
 				local mType = member.MemberType
 				if mType == "Property" then
@@ -15723,17 +15318,24 @@ end
 					table.insert(newClass.Properties,newMember)
 				elseif mType == "Function" then
 					newMember.Parameters = {}
-					newMember.ReturnType = member.ReturnType.Name
-					for c,param in pairs(member.Parameters) do
-						table.insert(newMember.Parameters,{Name = param.Name, Type = param.Type.Name})
+					newMember.ReturnType = member.ReturnType and member.ReturnType.Name or "void"
+					for _,param in pairs(member.Parameters or {}) do
+						table.insert(newMember.Parameters,{Name = param.Name, Type = param.Type and param.Type.Name or "any"})
 					end
 					table.insert(newClass.Functions,newMember)
 				elseif mType == "Event" then
 					newMember.Parameters = {}
-					for c,param in pairs(member.Parameters) do
-						table.insert(newMember.Parameters,{Name = param.Name, Type = param.Type.Name})
+					for _,param in pairs(member.Parameters or {}) do
+						table.insert(newMember.Parameters,{Name = param.Name, Type = param.Type and param.Type.Name or "any"})
 					end
 					table.insert(newClass.Events,newMember)
+				elseif mType == "Callback" then
+					newMember.Parameters = {}
+					newMember.ReturnType = member.ReturnType and member.ReturnType.Name or "void"
+					for _,param in pairs(member.Parameters or {}) do
+						table.insert(newMember.Parameters,{Name = param.Name, Type = param.Type and param.Type.Name or "any"})
+					end
+					table.insert(newClass.Callbacks,newMember)
 				end
 			end
 
@@ -15750,8 +15352,8 @@ end
 			newEnum.Items = {}
 			newEnum.Tags = {}
 
-			if enum.Tags then for c,tag in pairs(enum.Tags) do newEnum.Tags[tag] = true end end
-			for __,item in pairs(enum.Items) do
+			if enum.Tags then for _,tag in pairs(enum.Tags) do if type(tag) == "string" then newEnum.Tags[tag] = true end end end
+			for __,item in pairs(enum.Items or {}) do
 				local newItem = {}
 				newItem.Name = item.Name
 				newItem.Value = item.Value
@@ -15805,16 +15407,76 @@ end
 
 	Main.FetchRMD = function()
 		local rawXML
+		local cachedRMDs = {}
+		Main.ParsedRMD = nil
+		Main.RMDFromCache = false
+		local function parseRMD(xml)
+			if type(xml) ~= "string" then
+				return nil, "ReflectionMetadata is not a string"
+			end
+
+			local success,parsed = pcall(Lib.ParseXML,xml)
+			if not success then
+				return nil, tostring(parsed)
+			end
+			if not parsed or not parsed.children or not parsed.children[1]
+				or not parsed.children[1].children or not parsed.children[1].children[1]
+				or not parsed.children[1].children[2]
+			then
+				return nil, "ReflectionMetadata is missing classes or enums"
+			end
+			return parsed
+		end
+
 		if Main.Elevated then
+			for _,path in ipairs({"adex/rbx_rmd.dat","dex/rbx_rmd.dat","m/rbx_rmd.dat"}) do
+				local contents = Lib.ReadFile(path)
+				if contents then cachedRMDs[#cachedRMDs+1] = contents end
+			end
 			if Main.LocalDepsUpToDate() then
-				local localRMD = Lib.ReadFile("dex/rbx_rmd.dat")
-				if localRMD then 
-					rawXML = localRMD
-				else
-					Main.DepsVersionData[1] = ""
+				for _,cachedRMD in ipairs(cachedRMDs) do
+					local parsedCache = parseRMD(cachedRMD)
+					if parsedCache then
+						rawXML = cachedRMD
+						Main.ParsedRMD = parsedCache
+						Main.RMDFromCache = true
+						break
+					end
 				end
 			end
-			rawXML = rawXML or game:HttpGet("https://raw.githubusercontent.com/CloneTrooper1019/Roblox-Client-Tracker/roblox/ReflectionMetadata.xml")
+			if not rawXML then
+				local requestSuccess,downloadedRMD = pcall(function()
+					return game:HttpGet("https://raw.githubusercontent.com/CloneTrooper1019/Roblox-Client-Tracker/roblox/ReflectionMetadata.xml")
+				end)
+				if requestSuccess then
+					local parsedDownload,parseError = parseRMD(downloadedRMD)
+					if parsedDownload then
+						rawXML = downloadedRMD
+						Main.ParsedRMD = parsedDownload
+						Main.RMDFromCache = false
+					else
+						warn("AlwaysDex: Downloaded ReflectionMetadata is invalid: "..tostring(parseError))
+					end
+				else
+					warn("AlwaysDex: Failed to download ReflectionMetadata: "..tostring(downloadedRMD))
+				end
+			end
+			if not rawXML then
+				for _,cachedRMD in ipairs(cachedRMDs) do
+					local parsedCache,parseError = parseRMD(cachedRMD)
+					if parsedCache then
+						rawXML = cachedRMD
+						Main.ParsedRMD = parsedCache
+						Main.RMDFromCache = true
+						break
+					else
+						warn("AlwaysDex: Cached ReflectionMetadata is invalid: "..tostring(parseError))
+					end
+				end
+			end
+			if not rawXML then
+				error("AlwaysDex: Failed to load ReflectionMetadata from network and cache")
+			end
 		else
 			if script:FindFirstChild("RMD") then
 				rawXML = require(script.RMD)
@@ -15823,7 +15485,7 @@ end
 			end
 		end
 		Main.RawRMD = rawXML
-		local parsed = Lib.ParseXML(rawXML)
+		local parsed = Main.ParsedRMD or Lib.ParseXML(rawXML)
 		local classList = parsed.children[1].children[1].children
 		local enumList = parsed.children[1].children[2].children
 		local propertyOrders = {}
@@ -15931,12 +15593,12 @@ end
 			{7,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="StatusText",Parent={3},Position=UDim2.new(0,20,0,110),Size=UDim2.new(0,180,0,25),Text="Fetching API",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=1,}},
 			{8,"Frame",{BackgroundColor3=Color3.new(0.20392157137394,0.20392157137394,0.20392157137394),BorderSizePixel=0,Name="ProgressBar",Parent={3},Position=UDim2.new(0,110,0,145),Size=UDim2.new(0,0,0,4),}},
 			{9,"Frame",{BackgroundColor3=Color3.new(0.2392156869173,0.56078433990479,0.86274510622025),BorderSizePixel=0,Name="Bar",Parent={8},Size=UDim2.new(0,0,1,0),}},
-			{10,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://2764171053",ImageColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),Parent={8},ScaleType=1,Size=UDim2.new(1,0,1,0),SliceCenter=Rect.new(2,2,254,254),}},
-			{11,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Creator",Parent={2},Position=UDim2.new(1,-110,1,-20),Size=UDim2.new(0,105,0,20),Text="Developed by Chillz & enesxvc.",TextColor3=Color3.new(1,1,1),TextSize=14,TextXAlignment=1,}},
+			{10,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("2.png","rbxassetid://2764171053"),ImageColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),Parent={8},ScaleType=1,Size=UDim2.new(1,0,1,0),SliceCenter=Rect.new(2,2,254,254),}},
+			{11,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Creator",Parent={2},Position=UDim2.new(1,-110,1,-20),Size=UDim2.new(0,105,0,20),Text="Developed by enesxvc.",TextColor3=Color3.new(1,1,1),TextSize=14,TextXAlignment=1,}},
 			{12,"UIGradient",{Parent={11},Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(1,1,0),}),}},
 			{13,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Version",Parent={2},Position=UDim2.new(1,-110,1,-35),Size=UDim2.new(0,105,0,20),Text=Main.Version,TextColor3=Color3.new(1,1,1),TextSize=14,TextXAlignment=1,}},
 			{14,"UIGradient",{Parent={13},Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(1,1,0),}),}},
-			{15,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image="rbxassetid://1427967925",Name="Outlines",Parent={2},Position=UDim2.new(0,-5,0,-5),ScaleType=1,Size=UDim2.new(1,10,1,10),SliceCenter=Rect.new(6,6,25,25),TileSize=UDim2.new(0,20,0,20),}},
+			{15,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Image=Main.GetAssetId("borders.png","rbxassetid://1427967925"),Name="Outlines",Parent={2},Position=UDim2.new(0,-5,0,-5),ScaleType=1,Size=UDim2.new(1,10,1,10),SliceCenter=Rect.new(6,6,25,25),TileSize=UDim2.new(0,20,0,20),}},
 			{16,"UIGradient",{Parent={15},Rotation=-30,Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(1,1,0),}),}},
 			{17,"UIGradient",{Parent={2},Rotation=-30,Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(1,1,0),}),}},
 			{18,"UIDragDetector", {Parent={2}}}
@@ -16161,30 +15823,52 @@ end
 	end
 
 	Main.SetMainGuiOpen = function(val)
+		if Main.IsUninitialized or not Main.MainGui or not Main.MainGui.Parent then
+			return
+		end
+
+		local mainGui = Main.MainGui
+		local openButton = mainGui:FindFirstChild("OpenButton")
+		if not openButton then return end
+
 		Main.MainGuiOpen = val
 
-		Main.MainGui.OpenButton.Text = val and "Close" or "Dex"
-		if val then Main.MainGui.OpenButton.MainFrame.Visible = true end
-		Main.MainGui.OpenButton.MainFrame:TweenSize(val and UDim2.new(0,224,0,200) or UDim2.new(0,0,0,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,0.2,true)
-		--Main.MainGui.OpenButton.BackgroundTransparency = val and 0 or (Lib.CheckMouseInGui(Main.MainGui.OpenButton) and 0 or 0.2)
-		service.TweenService:Create(Main.MainGui.OpenButton,TweenInfo.new(0.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = val and 0 or (Lib.CheckMouseInGui(Main.MainGui.OpenButton) and 0 or 0.2)}):Play()
+		openButton.Text = val and "Close" or "Dex"
+		if val then openButton.MainFrame.Visible = true end
+		openButton.MainFrame:TweenSize(val and UDim2.new(0,224,0,200) or UDim2.new(0,0,0,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,0.2,true)
+		--openButton.BackgroundTransparency = val and 0 or (Lib.CheckMouseInGui(openButton) and 0 or 0.2)
+		service.TweenService:Create(openButton,TweenInfo.new(0.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = val and 0 or (Lib.CheckMouseInGui(openButton) and 0 or 0.2)}):Play()
 
-		if Main.MainGuiMouseEvent then Main.MainGuiMouseEvent:Disconnect() end
+		if Main.MainGuiMouseEvent then
+			Main.DisconnectConnection(Main.MainGuiMouseEvent)
+			Main.MainGuiMouseEvent = nil
+		end
 
 		if not val then
 			local startTime = tick()
 			Main.MainGuiCloseTime = startTime
 			coroutine.wrap(function()
 				Lib.FastWait(0.2)
-				if not Main.MainGuiOpen and startTime == Main.MainGuiCloseTime then Main.MainGui.OpenButton.MainFrame.Visible = false end
+				if not Main.IsUninitialized
+					and Main.MainGui == mainGui
+					and mainGui.Parent
+					and not Main.MainGuiOpen
+					and startTime == Main.MainGuiCloseTime
+				then
+					openButton.MainFrame.Visible = false
+				end
 			end)()
 		else
-			Main.MainGuiMouseEvent = service.UserInputService.InputBegan:Connect(function(input)
-				if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not Lib.CheckMouseInGui(Main.MainGui.OpenButton) and not Lib.CheckMouseInGui(Main.MainGui.OpenButton.MainFrame) then
-
+			Main.MainGuiMouseEvent = Main.TrackConnection(service.UserInputService.InputBegan:Connect(function(input)
+				if not Main.IsUninitialized
+					and Main.MainGui == mainGui
+					and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch)
+					and not Lib.CheckMouseInGui(openButton)
+					and not Lib.CheckMouseInGui(openButton.MainFrame)
+				then
 					Main.SetMainGuiOpen(false)
 				end
-			end)
+			end))
 		end
 	end
 
@@ -16200,15 +15884,15 @@ end
 			{8,"Frame",{BackgroundColor3=Color3.new(0.20392157137394,0.20392157137394,0.20392157137394),BorderSizePixel=0,Name="CoverFrame",Parent={6},Size=UDim2.new(1,0,0,4),}},
 			{9,"Frame",{BackgroundColor3=Color3.new(0.1294117718935,0.1294117718935,0.1294117718935),BorderSizePixel=0,Name="Line",Parent={8},Position=UDim2.new(0,0,0,-1),Size=UDim2.new(1,0,0,1),}},
 			{10,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Settings",Parent={6},Position=UDim2.new(1,-48,0,0),Size=UDim2.new(0,24,1,0),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{11,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://6578871732",ImageTransparency=0.20000000298023,Name="Icon",Parent={10},Position=UDim2.new(0,4,0,4),Size=UDim2.new(0,16,0,16),}},
+			{11,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("settings.png","rbxassetid://6578871732"),ImageTransparency=0.20000000298023,Name="Icon",Parent={10},Position=UDim2.new(0,4,0,4),Size=UDim2.new(0,16,0,16),}},
 			{12,"TextButton",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Information",Parent={6},Position=UDim2.new(1,-24,0,0),Size=UDim2.new(0,24,1,0),Text="",TextColor3=Color3.new(1,1,1),TextSize=14,}},
-			{13,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://6578933307",ImageTransparency=0.20000000298023,Name="Icon",Parent={12},Position=UDim2.new(0,4,0,4),Size=UDim2.new(0,16,0,16),}},
+			{13,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("info.png","rbxassetid://6578933307"),ImageTransparency=0.20000000298023,Name="Icon",Parent={12},Position=UDim2.new(0,4,0,4),Size=UDim2.new(0,16,0,16),}},
 			{14,"ScrollingFrame",{Active=true,AnchorPoint=Vector2.new(0.5,0),BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderColor3=Color3.new(0.1294117718935,0.1294117718935,0.1294117718935),BorderSizePixel=0,Name="AppsFrame",Parent={4},Position=UDim2.new(0.5,0,0,0),ScrollBarImageColor3=Color3.new(0,0,0),ScrollBarThickness=4,Size=UDim2.new(0,222,1,-25),}},
 			{15,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Name="Container",Parent={14},Position=UDim2.new(0,7,0,8),Size=UDim2.new(1,-14,0,2),}},
 			{16,"UIGridLayout",{CellSize=UDim2.new(0,66,0,74),Parent={15},SortOrder=2,}},
 			{17,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Name="App",Parent={1},Size=UDim2.new(0,100,0,100),Visible=false,}},
 			{18,"TextButton",{AutoButtonColor=false,BackgroundColor3=Color3.new(0.2352941185236,0.2352941185236,0.2352941185236),BorderSizePixel=0,Font=3,Name="Main",Parent={17},Size=UDim2.new(1,0,0,60),Text="",TextColor3=Color3.new(0,0,0),TextSize=14,}},
-			{19,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image="rbxassetid://129589545519436",ImageRectSize=Vector2.new(32,32),Name="Icon",Parent={18},Position=UDim2.new(0.5,-16,0,4),ScaleType=4,Size=UDim2.new(0,32,0,32),}},
+			{19,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=Main.GetAssetId("NewerTopbarIcons.png","rbxassetid://129589545519436"),ImageRectSize=Vector2.new(32,32),Name="Icon",Parent={18},Position=UDim2.new(0.5,-16,0,4),ScaleType=4,Size=UDim2.new(0,32,0,32),}},
 			{20,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,BorderSizePixel=0,Font=3,Name="AppName",Parent={18},Position=UDim2.new(0,2,0,38),Size=UDim2.new(1,-4,1,-40),Text="Explorer",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=0.10000000149012,TextTruncate=1,TextWrapped=true,TextYAlignment=0,}},
 			{21,"Frame",{BackgroundColor3=Color3.new(0,0.66666668653488,1),BorderSizePixel=0,Name="Highlight",Parent={18},Position=UDim2.new(0,0,1,-2),Size=UDim2.new(1,0,0,2),}},
 		})
@@ -16220,22 +15904,71 @@ end
 		Main.MainGuiOpen = false
 
 		local openButton = gui.OpenButton
+		local dragInput,dragStart,startPosition,dragged
 		openButton.BackgroundTransparency = 0.2
 		openButton.MainFrame.Size = UDim2.new(0,0,0,0)
 		openButton.MainFrame.Visible = false
-		openButton.MouseButton1Click:Connect(function()
-			Main.SetMainGuiOpen(not Main.MainGuiOpen)
+		openButton.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				dragInput = input
+				dragStart = input.Position
+				startPosition = openButton.Position
+				dragged = false
+			end
 		end)
 
+		Main.TrackConnection(service.UserInputService.InputChanged:Connect(function(input)
+			if not dragInput or Main.MainGui ~= gui or not Settings.Explorer.DraggablePill then return end
+			if input.UserInputType ~= Enum.UserInputType.MouseMovement and input ~= dragInput then return end
+
+			local delta = input.Position - dragStart
+			if delta.Magnitude > 5 then dragged = true end
+			if dragged then
+				openButton.Position = UDim2.new(
+					startPosition.X.Scale,startPosition.X.Offset + delta.X,
+					startPosition.Y.Scale,startPosition.Y.Offset + delta.Y
+				)
+			end
+		end))
+
+		Main.TrackConnection(service.UserInputService.InputEnded:Connect(function(input)
+			if not dragInput then return end
+			if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input ~= dragInput then return end
+
+			local didDrag = dragged
+			dragInput = nil
+			dragStart = nil
+			startPosition = nil
+			dragged = nil
+
+			if didDrag or Main.MainGui ~= gui or Main.IsUninitialized then return end
+			local position = input.Position
+			local buttonPosition = openButton.AbsolutePosition
+			local buttonSize = openButton.AbsoluteSize
+			if position.X >= buttonPosition.X and position.X <= buttonPosition.X + buttonSize.X
+				and position.Y >= buttonPosition.Y and position.Y <= buttonPosition.Y + buttonSize.Y
+			then
+				Main.SetMainGuiOpen(not Main.MainGuiOpen)
+			end
+		end))
+
 		openButton.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-				service.TweenService:Create(Main.MainGui.OpenButton,TweenInfo.new(0,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
+			if not Main.IsUninitialized
+				and Main.MainGui == gui
+				and openButton.Parent
+				and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch)
+			then
+				service.TweenService:Create(openButton,TweenInfo.new(0,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
 			end
 		end)
 
 		openButton.InputEnded:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-				service.TweenService:Create(Main.MainGui.OpenButton,TweenInfo.new(0,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = Main.MainGuiOpen and 0 or 0.2}):Play()
+			if not Main.IsUninitialized
+				and Main.MainGui == gui
+				and openButton.Parent
+				and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch)
+			then
+				service.TweenService:Create(openButton,TweenInfo.new(0,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency = Main.MainGuiOpen and 0 or 0.2}):Play()
 			end
 		end)
 		
@@ -16255,9 +15988,7 @@ end
 			local duration = 1
 			local Infos = {
 				"Contributors >>",
-				"Toon (IY Dex and PRs)",
-				"Moon (Dex)",
-				"Cazan (3D Preview)",
+				"no",
 			}
 			
 			if isInfoCD then return end
@@ -16297,7 +16028,7 @@ end
 		Main.CreateApp({Name = "Click part to select", IconMap = Explorer.ClassIcons, Icon = "SelectionBox", OnClick = function(callback)
 			if callback then
 				local mouse = Main.Mouse
-				cptsOnMouseClick = mouse.Button1Down:Connect(function()
+				cptsOnMouseClick = Main.TrackConnection(mouse.Button1Down:Connect(function()
 					pcall(function()
 						local object = mouse.Target
 						if nodes[object] then
@@ -16305,8 +16036,8 @@ end
 							Explorer.ViewNode(nodes[object])
 						end
 					end)
-				end)
-			else if cptsOnMouseClick ~= nil then cptsOnMouseClick:Disconnect() cptsOnMouseClick = nil end end
+				end))
+			else if cptsOnMouseClick ~= nil then Main.DisconnectConnection(cptsOnMouseClick) cptsOnMouseClick = nil end end
 		end})
 
 		Main.CreateApp({Name = "Notepad", IconMap = Main.LargeIcons, Icon = "Script_Viewer", Window = ScriptViewer.Window})
@@ -16316,8 +16047,6 @@ end
 		Main.CreateApp({Name = "Save Instance", IconMap = Main.LargeIcons, Icon = "Book", Window = SaveInstance.Window})
 		
 		Main.CreateApp({Name = "3D Viewer", IconMap = Main.LargeIcons, Icon = "Object", Window = ModelViewer.Window})
-
-		Main.CreateApp({Name = "AI Chat", IconMap = Main.LargeIcons, Icon = "Chat", Window = AIChat.Window})
 
 		--Main.CreateApp({Name = "Secret Service Panel", IconMap = Main.LargeIcons, Icon = "Output", Window = SecretServicePanel.Window})
 		
@@ -16333,6 +16062,14 @@ end
 
 		local writefile,makefolder = env.writefile,env.makefolder
 
+		if env.isfolder then
+			if not env.isfolder("adex") then makefolder("adex") end
+		else
+			local success,folderError = pcall(makefolder,"adex")
+			if not success then
+				warn("AlwaysDex: Failed to prepare adex cache folder: "..tostring(folderError))
+			end
+		end
 		makefolder("dex")
 		makefolder("dex/assets")
 		makefolder("dex/saved")
@@ -16342,7 +16079,7 @@ end
 
 	Main.SaveCurrentSettings = function()
 		if writefile then
-			writefile("DexPlusPlusSettings.json", Main.ExportSettings())
+			writefile("adex/settings.json", Main.ExportSettings())
 		end
 	end
 
@@ -16350,11 +16087,39 @@ end
 		return Main.DepsVersionData and Main.ClientVersion == Main.DepsVersionData[1]
 	end
 
+	local assetNames = {
+		"2.png", "NewerTopbarIcons.png", "NewestIcons.png", "Test_Icons.png", "Texture.png",
+		"arrow3.png", "borders.png", "checkmark (2).png", "checkmark.png", "close3.png",
+		"colors.png", "colorstrip.png", "honey icon.png", "icondraft.png", "info.png",
+		"luvlies.png", "minimize2.png", "refresh-icon3.png", "search2.png", "settings.png",
+		"settings2.png", "sprite_sheet (1).png", "squares_icon2.png"
+	}
+
+	Main.GetAssetId = function(fileName, fallback)
+		if not Settings.Assets.UseGetCustomAsset or not getcustomasset or not env.isfile then
+			return fallback
+		end
+
+		local assetPath = "adex/images/" .. fileName
+		if not env.isfile(assetPath) then
+			return fallback
+		end
+
+		local success, assetId = pcall(getcustomasset, assetPath)
+		if success and type(assetId) == "string" and assetId ~= "" then
+			return assetId
+		end
+
+		warn("AlwaysDex: Failed to load custom asset " .. assetPath .. ": " .. tostring(assetId))
+		return fallback
+	end
+
 	Main.Init = function()
+		Main.IsUninitialized = false
 		Main.Elevated = pcall(function() local a = game:GetService("CoreGui"):GetFullName() end)
 		
 		-- saves new settings if does not exist
-		if isfile and not isfile("DexPlusPlusSettings.json") then
+		if isfile and not isfile("adex/settings.json") then
 			Main.SaveCurrentSettings()
 		end
 		
@@ -16368,11 +16133,57 @@ end
 		Lib = Main.LoadModule("Lib")
 		Lib.FastWait()
 
-		-- Init other stuff
-		--Main.IncompatibleTest()
-
 		-- Init icons
-		Main.MiscIcons = Lib.IconMap.new("rbxassetid://6511490623",256,256,16,16)
+		if Settings.Assets.UseGetCustomAsset then
+			if Main.Elevated and getcustomasset and env.writefile and env.makefolder and env.isfile and env.isfolder then
+				local folderReady, folderError = pcall(function()
+					if not env.isfolder("adex") then env.makefolder("adex") end
+					if not env.isfolder("adex/images") then env.makefolder("adex/images") end
+				end)
+
+				if folderReady then
+					local missingAssets = {}
+					for _, fileName in ipairs(assetNames) do
+						if not env.isfile("adex/images/" .. fileName) then
+							table.insert(missingAssets, fileName)
+						end
+					end
+
+					local totalAssets = #missingAssets
+					for index, fileName in ipairs(missingAssets) do
+						intro.SetProgress(
+							("Downloading UI assets (%d/%d)"):format(index, totalAssets),
+							0.05 + (index / totalAssets) * 0.2
+						)
+
+						local encodedFileName = fileName:gsub(" ", "%%20"):gsub("%(", "%%28"):gsub("%)", "%%29")
+						local url = "https://raw.githubusercontent.com/infyif/dex/main/assets/rbxassets/" .. encodedFileName
+						local downloadSuccess, data = pcall(function()
+							return oldgame:HttpGet(url)
+						end)
+						if downloadSuccess and type(data) == "string" and #data > 0 then
+							local writeSuccess, writeError = pcall(env.writefile, "adex/images/" .. fileName, data)
+							if not writeSuccess then
+								warn("AlwaysDex: Failed to save UI asset " .. fileName .. ": " .. tostring(writeError))
+							end
+						else
+							warn("AlwaysDex: Failed to download UI asset " .. fileName .. ": " .. tostring(data))
+						end
+					end
+				else
+					warn("AlwaysDex: Failed to prepare adex/images: " .. tostring(folderError))
+				end
+			elseif not getcustomasset then
+				warn("AlwaysDex: Custom assets are enabled, but getcustomasset is unavailable")
+			else
+				warn("AlwaysDex: Custom assets are enabled, but filesystem APIs or CoreGui access are unavailable")
+			end
+		end
+
+		intro.Object.Main.Outlines.Image = Main.GetAssetId("borders.png", "rbxassetid://1427967925")
+		intro.Object.Main.Holder.ProgressBar.ImageLabel.Image = Main.GetAssetId("2.png", "rbxassetid://2764171053")
+
+		Main.MiscIcons = Lib.IconMap.new(Main.GetAssetId("NewestIcons.png", "rbxassetid://6511490623"),256,256,16,16)
 		Main.MiscIcons:SetDict({
 			Reference = 0,             Cut = 1,                         Cut_Disabled = 2,      Copy = 3,               Copy_Disabled = 4,    Paste = 5,                Paste_Disabled = 6,
 			Delete = 7,                Delete_Disabled = 8,             Group = 9,             Group_Disabled = 10,    Ungroup = 11,         Ungroup_Disabled = 12,    TeleportTo = 13,
@@ -16381,9 +16192,9 @@ end
 			SelectChildren = 28,       SelectChildren_Disabled = 29,    InsertObject = 30,     ViewScript = 31,        AddStar = 32,         RemoveStar = 33,          Script_Disabled = 34,
 			LocalScript_Disabled = 35, Play = 36,                       Pause = 37,            Rename_Disabled = 38,   Empty = 1000
 		})
-		Main.LargeIcons = Lib.IconMap.new("rbxassetid://129589545519436",256,256,32,32)
+		Main.LargeIcons = Lib.IconMap.new(Main.GetAssetId("NewerTopbarIcons.png", "rbxassetid://129589545519436"),256,256,32,32)
 		Main.LargeIcons:SetDict({
-			Explorer = 0, Properties = 1, Script_Viewer = 2, Watcher = 3, Output = 4, ScriptEdit = 5, Book = 6, Executor = 7, Object = 8, Honey = 9, Chat = 4
+			Explorer = 0, Properties = 1, Script_Viewer = 2, Watcher = 3, Output = 4, ScriptEdit = 5, Book = 6, Executor = 7, Object = 8, Honey = 9
 		})
 		
 		--[[ Loading bypasses
@@ -16396,21 +16207,49 @@ end
 		-- Fetch version if needed
 		intro.SetProgress("Fetching Roblox Version",0.3)
 		if Main.Elevated then
-			local fileVer = Lib.ReadFile("dex/deps_version.dat")
-			Main.ClientVersion = Version()
-			if fileVer then
-				Main.DepsVersionData = string.split(fileVer,"\n")
-				if Main.LocalDepsUpToDate() then
-					Main.RobloxVersion = Main.DepsVersionData[2]
+			Main.ClientVersion = nil
+			Main.RobloxVersion = nil
+			Main.DepsVersionData = nil
+			local cachedVersions = {}
+			for _,path in ipairs({"adex/deps_version.dat","dex/deps_version.dat","m/deps_version.dat"}) do
+				local fileVer = Lib.ReadFile(path)
+				if fileVer then
+					local versionData = string.split(fileVer,"\n")
+					versionData[1] = versionData[1] and versionData[1]:gsub("\r$","")
+					versionData[2] = versionData[2] and versionData[2]:gsub("\r$","")
+					cachedVersions[#cachedVersions+1] = versionData
 				end
 			end
+			local versionSuccess,clientVersion = pcall(Version)
+			if versionSuccess then Main.ClientVersion = clientVersion end
+			for _,versionData in ipairs(cachedVersions) do
+				if Main.ClientVersion and versionData[1] == Main.ClientVersion then
+					Main.DepsVersionData = versionData
+					break
+				end
+			end
+			Main.DepsVersionData = Main.DepsVersionData or cachedVersions[1]
+			if Main.LocalDepsUpToDate() then Main.RobloxVersion = Main.DepsVersionData[2] end
 			
-			Main.RobloxVersion = Main.RobloxVersion or oldgame:HttpGet("https://clientsettings.roblox.com/v2/client-version/WindowsStudio64/channel/LIVE"):match("(version%-[%w]+)")
+			if not Main.RobloxVersion then
+				local fetchSuccess,versionResponse = pcall(function()
+					return oldgame:HttpGet("https://clientsettings.roblox.com/v2/client-version/WindowsStudio64/channel/LIVE")
+				end)
+				if fetchSuccess and type(versionResponse) == "string" then
+					Main.RobloxVersion = versionResponse:match("(version%-[%w]+)")
+				else
+					warn("AlwaysDex: Failed to fetch Roblox client version: "..tostring(versionResponse))
+				end
+			end
+			Main.RobloxVersion = Main.RobloxVersion or (Main.DepsVersionData and Main.DepsVersionData[2])
+			if not Main.RobloxVersion then
+				warn("AlwaysDex: Roblox client version is unavailable; will try cached dependencies")
+			end
 		end
 
 		-- Fetch external deps
 		intro.SetProgress("Fetching API",0.35)
-		API = Main.FetchAPI(
+		local fetchedAPI,apiError = Main.FetchAPI(
 			function()
 				intro.SetProgress("Fetching API, Please Wait.",0.4)
 			end,
@@ -16421,16 +16260,32 @@ end
 				intro.SetProgress("Fetching API, LOL STILL DOWNlOADING? bad wifi xD",0.475)
 			end
 		)
+		if not fetchedAPI then
+			warn("AlwaysDex: "..tostring(apiError or "Failed to get API"))
+			for seconds = 10,1,-1 do
+				intro.SetProgress(("Failed to get API. Closing in %d..."):format(seconds),0.35 + ((11-seconds)/10)*0.6)
+				task.wait(1)
+			end
+			intro.SetProgress("Failed to get API. Closing...",1)
+			intro.Close()
+			return
+		end
+		API = fetchedAPI
 		Lib.FastWait()
 		intro.SetProgress("Fetching RMD",0.5)
 		RMD = Main.FetchRMD()
 		Lib.FastWait()
 
 		-- Save external deps locally if needed
-		if Main.Elevated and env.writefile and not Main.LocalDepsUpToDate() then
-			env.writefile("dex/deps_version.dat",Main.ClientVersion.."\n"..Main.RobloxVersion)
-			env.writefile("dex/rbx_api.dat",Main.RawAPI)
-			env.writefile("dex/rbx_rmd.dat",Main.RawRMD)
+		if Main.Elevated and env.writefile and Main.ClientVersion and Main.RobloxVersion
+			and not Main.APIFromCache and not Main.RMDFromCache and not Main.LocalDepsUpToDate()
+		then
+			local depsVersion = Main.ClientVersion.."\n"..Main.RobloxVersion
+			for _,folder in ipairs({"adex","dex"}) do
+				env.writefile(folder.."/deps_version.dat",depsVersion)
+				env.writefile(folder.."/rbx_api.dat",Main.RawAPI)
+				env.writefile(folder.."/rbx_rmd.dat",Main.RawRMD)
+			end
 		end
 
 		-- Load other modules
@@ -16448,7 +16303,6 @@ end
 		SaveInstance.Init()
 		ModelViewer.Init()
 		SettingsWindow.Init()
-		AIChat.Init()
 		--SecretServicePanel.Init()
 		
 		
@@ -16494,14 +16348,34 @@ end
 	end
 	
 	Main.Uninit = function()
+		if Main.IsUninitialized then return end
+		Main.IsUninitialized = true
+		Main.MainGuiOpen = false
+		Main.MainGuiCloseTime = nil
+		if Properties and Properties.Uninit then
+			Properties.Uninit()
+		end
+		for index = #Main.TrackedConnections, 1, -1 do
+			local connection = Main.TrackedConnections[index]
+			connection:Disconnect()
+			Main.TrackedConnections[index] = nil
+		end
+		Main.MainGuiMouseEvent = nil
+
 		Main.MenuApps = {}
 		Main.AppControls = {}
 		Main.Plugins = {}
-		for _, gui in pairs(Main.GetSecureContainer():GetChildren()) do
+		local secureContainer = Main.GetSecureContainer()
+		for _, gui in pairs(secureContainer:GetChildren()) do
 			if string.sub(gui.Name,1,5) == "_DPP_" then -- DPP stands for DexPlusPlus
 				gui:Destroy()
 			end
 		end
+		Main.MainGui = nil
+		Main.AppsFrame = nil
+		Main.AppsContainer = nil
+		Main.AppsContainerGrid = nil
+		Main.AppTemplate = nil
 	end
 
 	Main.Reinit = function()
