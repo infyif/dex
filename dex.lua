@@ -3285,7 +3285,7 @@ return search]==]
 		Explorer.SetClassIcon(Settings.ClassIcon)
 		local newDarkIcons = Lib.IconMap.getIconDataFromName("NewDark")
 		Explorer.ActionIcons = Lib.IconMap.new(
-			"rbxassetid://" .. tostring(newDarkIcons.MapId),
+			Main.GetAssetId("Texture.png", "rbxassetid://" .. tostring(newDarkIcons.MapId)),
 			newDarkIcons.IconSize * newDarkIcons.Witdh,
 			newDarkIcons.IconSize * newDarkIcons.Height,
 			newDarkIcons.IconSize,
@@ -3440,9 +3440,14 @@ return search]==]
 		local data = Lib.IconMap.getIconDataFromName(style)
 		iconData = data
 		Settings.ClassIcon = style
-		local mapId = style == "Old"
-			and Main.GetAssetId("icondraft.png", "rbxassetid://" .. tostring(data.MapId))
-			or ("rbxassetid://" .. tostring(data.MapId))
+		local mapId = "rbxassetid://" .. tostring(data.MapId)
+		if style == "Old" then
+			mapId = Main.GetAssetId("icondraft.png", mapId)
+		elseif style == "NewDark" then
+			mapId = Main.GetAssetId("Texture.png", mapId)
+		elseif style == "Vanilla3" then
+			mapId = Main.GetAssetId("sprite_sheet (1).png", mapId)
+		end
 		Lib.IconMap.setExplorerIconStyle(style, mapId)
 
 		local displayDict = {}
@@ -14603,14 +14608,11 @@ Main = (function()
 	Main.Elevated = false
 	Main.AllowDraggableOnMobile = true
 	Main.MissingEnv = {}
-	Main.Version = ""
+	Main.Version = "v1.4"
 	Main.Mouse = plr:GetMouse()
 	Main.AppControls = {}
 	Main.Apps = Apps
 	Main.MenuApps = {}
-	Main.GitName = "AZYsGithub"
-	Main.RepoName = "DexPlusPlus"
-	Main.GitRepoName = Main.GitName.."/"..Main.RepoName
 
 	Main.DisplayOrders = {
 		SideWindow = 8,
