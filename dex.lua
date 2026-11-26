@@ -1498,7 +1498,7 @@ local function main()
 
 				entry.Indent.EntryName.TextTruncate = (Settings.Explorer.UseNameWidth and Enum.TextTruncate.None or Enum.TextTruncate.AtEnd)
 
-				Explorer.MiscIcons:DisplayExplorerIcons(entry.Indent.Icon, obj.ClassName)
+				Explorer.ClassIcons:DisplayExplorerIcons(entry.Indent.Icon, obj.ClassName)
 
 				if selection.Map[node] then
 					entry.Indent.BackgroundColor3 = Settings.Theme.ListSelection
@@ -1769,7 +1769,11 @@ local function main()
 		
 		
 		
-		if presentClasses["Player"] then context:AddRegistered("SELECT_CHARACTER")context:AddRegistered("VIEW_PLAYER") end
+		if presentClasses["Player"] then
+			context:AddRegistered("SELECT_CHARACTER")
+			context:AddRegistered("VIEW_PLAYER")
+			context:AddRegistered("UNVIEW_PLAYER")
+		end
 		if presentClasses["Players"] then
 			context:AddRegistered("SELECT_LOCAL_PLAYER")
 			context:AddRegistered("SELECT_ALL_CHARACTERS")
@@ -2148,7 +2152,15 @@ local function main()
 			return str
 		end
 
-		context:Register("COPY_PATH",{Name = "Copy Path", IconMap = Explorer.LegacyClassIcons, Icon = 50, OnClick = function()
+		local copyPathIconMap = {
+			Display = function(_, obj)
+				obj.Image = Main.GetAssetId("icondraft.png", "rbxassetid://483448923")
+				obj.ImageRectSize = Vector2.new(16, 16)
+				obj.ImageRectOffset = Vector2.new(145, 55)
+			end
+		}
+
+		context:Register("COPY_PATH",{Name = "Copy Path", IconMap = copyPathIconMap, Icon = 50, OnClick = function()
 			local sList = selection.List
 			if #sList == 1 then
 				env.setclipboard(clth(Explorer.GetInstancePath(sList[1].Obj)))
@@ -2384,6 +2396,14 @@ local function main()
 					workspace.CurrentCamera.CameraSubject = Obj.Character
 					break
 				end
+			end
+		end})
+
+		context:Register("UNVIEW_PLAYER",{Name = "Unview Player", IconMap = Explorer.LegacyClassIcons, Icon = 5, OnClick = function()
+			local character = plr.Character
+			local camera = workspace.CurrentCamera
+			if character and camera then
+				camera.CameraSubject = character
 			end
 		end})
 
@@ -3262,21 +3282,16 @@ return search]==]
 
 	Explorer.Init = function()
 		Explorer.LegacyClassIcons = Lib.IconMap.newLinear("rbxasset://textures/ClassImages.PNG", 16,16)
-		if Settings.ClassIcon ~= nil and Settings.ClassIcon ~= "Old" then
-			iconData = Lib.IconMap.getIconDataFromName(Settings.ClassIcon)
-			
-			Explorer.ClassIcons = Lib.IconMap.new("rbxassetid://"..tostring(iconData.MapId), iconData.IconSize * iconData.Witdh, iconData.IconSize * iconData.Height,iconData.IconSize,iconData.IconSize)
-			-- move every value dict 1 behind because SetDict starts at 0 not 1 lol
-			local fixed = {}
-			for i,v in pairs(iconData.Icons) do
-				fixed[i] = v - 1
-			end
-			
-			iconData.Icons = fixed
-			Explorer.ClassIcons:SetDict(fixed)
-		else
-			Explorer.ClassIcons = Lib.IconMap.newLinear("rbxasset://textures/ClassImages.PNG", 16,16)
-		end
+		Explorer.SetClassIcon(Settings.ClassIcon)
+		local newDarkIcons = Lib.IconMap.getIconDataFromName("NewDark")
+		Explorer.ActionIcons = Lib.IconMap.new(
+			"rbxassetid://" .. tostring(newDarkIcons.MapId),
+			newDarkIcons.IconSize * newDarkIcons.Witdh,
+			newDarkIcons.IconSize * newDarkIcons.Height,
+			newDarkIcons.IconSize,
+			newDarkIcons.IconSize
+		)
+		Explorer.ActionIcons:SetDict({SelectionBox = newDarkIcons.Icons.SelectionBox - 1})
 		
 		Explorer.MiscIcons = Main.MiscIcons
 
@@ -3415,6 +3430,67 @@ return search]==]
 				nodes[obj] = newNode
 				par[#par+1] = newNode
 			end
+		end
+	end
+
+	Explorer.SetClassIcon = function(style)
+		if style ~= "Old" and style ~= "NewDark" and style ~= "Vanilla3" then
+			style = "Old"
+		end
+		local data = Lib.IconMap.getIconDataFromName(style)
+		iconData = data
+		Settings.ClassIcon = style
+		local mapId = style == "Old"
+			and Main.GetAssetId("icondraft.png", "rbxassetid://" .. tostring(data.MapId))
+			or ("rbxassetid://" .. tostring(data.MapId))
+		Lib.IconMap.setExplorerIconStyle(style, mapId)
+
+		local displayDict = {}
+		for className, iconIndex in pairs(data.Icons) do
+			displayDict[className] = type(iconIndex) == "number" and style ~= "Old" and iconIndex - 1 or iconIndex
+		end
+
+		if Explorer.ClassIcons then
+			Explorer.ClassIcons.MapId = mapId
+			Explorer.ClassIcons.MapSizeX = data.IconSize * data.Witdh
+			Explorer.ClassIcons.MapSizeY = data.IconSize * data.Height
+			Explorer.ClassIcons.IconSizeX = data.IconSize
+			Explorer.ClassIcons.IconSizeY = data.IconSize
+			Explorer.ClassIcons.NumX = data.Witdh
+			Explorer.ClassIcons.Style = style
+			Explorer.ClassIcons:SetDict(displayDict)
+		else
+			Explorer.ClassIcons = Lib.IconMap.new(
+				mapId,
+				data.IconSize * data.Witdh,
+				data.IconSize * data.Height,
+				data.IconSize,
+				data.IconSize
+			)
+			Explorer.ClassIcons.Style = style
+			Explorer.ClassIcons:SetDict(displayDict)
+		end
+		Explorer.ClassIcons.ExplorerIcons.MapId = mapId
+
+		if treeFrame then
+			Explorer.Refresh()
+		end
+		if Explorer.InsertObjectContext then
+			for _, item in ipairs(Explorer.InsertObjectContext.Items) do
+				if not item.Divider and item.IconMap == Explorer.ClassIcons then
+					local iconIndex = data.Icons[item.Name] or data.Icons.Placeholder
+					if type(iconIndex) == "number" and style ~= "Old" then
+						iconIndex = iconIndex - 1
+					end
+					item.Icon = iconIndex or ""
+					item.DisabledIcon = item.Icon
+				end
+			end
+			Explorer.InsertObjectContext.Updated = nil
+			Explorer.InsertObjectContext:Refresh()
+		end
+		for _, app in pairs(Main.MenuApps) do
+			if app.RefreshIcon then app.RefreshIcon() end
 		end
 	end
 
@@ -4962,6 +5038,9 @@ local function main()
 			},
 			NewDark = {
 				MapId = 135148380892747,
+				IconSize = 32,
+				Witdh = 18,
+				Height = 18,
 				Icons = {
 					Accessory = 1,
 					Actor = 2,
@@ -5292,18 +5371,19 @@ local function main()
 				Height = 18,
 			}
 		}
-		if Settings.ClassIcon and IconList[Settings.ClassIcon] then
+		funcs.SetExplorerIconStyle = function(style, mapIdOverride)
+			local data = IconList[style] or IconList.Old
 			funcs.ExplorerIcons = {
-				["MapId"] = IconList[Settings.ClassIcon].MapId,
-				["Icons"] = IconList[Settings.ClassIcon].Icons,
-				["IconSize"] = IconList[Settings.ClassIcon].IconSize,
-				["Witdh"] = IconList[Settings.ClassIcon].Witdh,
-				["Height"] = IconList[Settings.ClassIcon].Height}
-		else
-			funcs.ExplorerIcons = { ["MapId"] = IconList.Old.MapId, ["Icons"] = IconList.Old.Icons, ["IconSize"] = IconList.Old.IconSize }
+				MapId = mapIdOverride or data.MapId,
+				Icons = data.Icons,
+				IconSize = data.IconSize,
+				Witdh = data.Witdh,
+				Height = data.Height
+			}
+			return data
 		end
-		
-		
+
+		funcs.SetExplorerIconStyle(Settings.ClassIcon)
 
 		funcs.GetLabel = function(self)
 			local label = Instance.new("ImageLabel")
@@ -5330,7 +5410,7 @@ local function main()
 		end
 
 		funcs.DisplayByKey = function(self, obj, key)
-			if self.IndexDict[key] then
+			if self.IndexDict[key] ~= nil then
 				self:Display(obj, self.IndexDict[key])
 			else
 				local rmdEntry = RMD.Classes[obj.ClassName]
@@ -5344,35 +5424,58 @@ local function main()
 		
 		local ClassNameNoImage = {}
 		funcs.GetExplorerIcon = function(self, obj, index)
+			local explorerIcons = funcs.ExplorerIcons
+			local mapId = tostring(explorerIcons.MapId)
+			obj.Image = mapId:match("^rbxasset") and mapId or ("rbxassetid://" .. mapId)
+
 			if Settings.ClassIcon == "Vanilla3" then
+				obj.Position = UDim2.new(0, 0, 0, 0)
 				obj.Size = UDim2.fromOffset(16, 16)
 
-				index = (self.ExplorerIcons.Icons[index] or 250) - 1
-				obj.ImageRectOffset = Vector2.new(funcs.ExplorerIcons.IconSize * (index % funcs.ExplorerIcons.Height), funcs.ExplorerIcons.IconSize * math.floor(index / funcs.ExplorerIcons.Height))
-				obj.ImageRectSize = Vector2.new(funcs.ExplorerIcons.IconSize, funcs.ExplorerIcons.IconSize)
+				local iconIndex = explorerIcons.Icons[index]
+				if type(iconIndex) ~= "number" then iconIndex = explorerIcons.Icons.Placeholder end
+				if type(iconIndex) ~= "number" then iconIndex = 1 end
+				index = math.max(iconIndex - 1, 0)
+				obj.ImageRectOffset = Vector2.new(explorerIcons.IconSize * (index % explorerIcons.Height), explorerIcons.IconSize * math.floor(index / explorerIcons.Height))
+				obj.ImageRectSize = Vector2.new(explorerIcons.IconSize, explorerIcons.IconSize)
 			elseif Settings.ClassIcon == "Old" then
-				index = (self.ExplorerIcons.Icons[index] or 0)
+				index = explorerIcons.Icons[index]
+				if type(index) ~= "number" then index = 0 end
 				local row, col = self:IconDehash(index)
 				local MapSize = Vector2.new(256, 256)
 				local pad, border = 2, 1
 
-				obj.Position = UDim2.new(-col - (pad * (col + 1) + border) / funcs.ExplorerIcons.IconSize, 0, -row - (pad * (row + 1) + border) / funcs.ExplorerIcons.IconSize, 0)
-				obj.Size = UDim2.new(MapSize.X / funcs.ExplorerIcons.IconSize, 0, MapSize.Y / funcs.ExplorerIcons.IconSize, 0)
+				obj.ImageRectOffset = Vector2.new(0, 0)
+				obj.ImageRectSize = Vector2.new(0, 0)
+				obj.Position = UDim2.new(-col - (pad * (col + 1) + border) / explorerIcons.IconSize, 0, -row - (pad * (row + 1) + border) / explorerIcons.IconSize, 0)
+				obj.Size = UDim2.new(MapSize.X / explorerIcons.IconSize, 0, MapSize.Y / explorerIcons.IconSize, 0)
 			elseif Settings.ClassIcon == "NewLight" or Settings.ClassIcon == "NewDark" then
-				local isService = string.find(index, "Service") and game:GetService(index)
+				local className = index
+				local isService = false
+				if type(className) == "string" and string.find(className, "Service") then
+					local success, serviceInstance = pcall(game.GetService, game, className)
+					isService = success and serviceInstance ~= nil
+				end
 				
+				obj.Position = UDim2.new(0, 0, 0, 0)
 				obj.Size = UDim2.fromOffset(16, 16)
-				index = (self.ExplorerIcons.Icons[index] or (isService and self.ExplorerIcons.Icons.Service) or self.ExplorerIcons.Icons.Placeholder) - 1
-				obj.ImageRectOffset = Vector2.new(funcs.ExplorerIcons.IconSize * (index % funcs.ExplorerIcons.Height), funcs.ExplorerIcons.IconSize * math.floor(index / funcs.ExplorerIcons.Height))
-				obj.ImageRectSize = Vector2.new(funcs.ExplorerIcons.IconSize, funcs.ExplorerIcons.IconSize)
+				local iconIndex = explorerIcons.Icons[className] or (isService and explorerIcons.Icons.Service) or explorerIcons.Icons.Placeholder or 1
+				if type(iconIndex) ~= "number" then iconIndex = explorerIcons.Icons.Placeholder or 1 end
+				if type(iconIndex) ~= "number" then iconIndex = 1 end
+				index = math.max(iconIndex - 1, 0)
+				obj.ImageRectOffset = Vector2.new(explorerIcons.IconSize * (index % explorerIcons.Height), explorerIcons.IconSize * math.floor(index / explorerIcons.Height))
+				obj.ImageRectSize = Vector2.new(explorerIcons.IconSize, explorerIcons.IconSize)
 			else
-				index = (self.ExplorerIcons.Icons[index] or 0)
+				index = explorerIcons.Icons[index]
+				if type(index) ~= "number" then index = 0 end
 				local row, col = self:IconDehash(index)
 				local MapSize = Vector2.new(256, 256)
 				local pad, border = 2, 1
 
-				obj.Position = UDim2.new(-col - (pad * (col + 1) + border) / funcs.ExplorerIcons.IconSize, 0, -row - (pad * (row + 1) + border) / funcs.ExplorerIcons.IconSize, 0)
-				obj.Size = UDim2.new(MapSize.X / funcs.ExplorerIcons.IconSize, 0, MapSize.Y / funcs.ExplorerIcons.IconSize, 0)
+				obj.ImageRectOffset = Vector2.new(0, 0)
+				obj.ImageRectSize = Vector2.new(0, 0)
+				obj.Position = UDim2.new(-col - (pad * (col + 1) + border) / explorerIcons.IconSize, 0, -row - (pad * (row + 1) + border) / explorerIcons.IconSize, 0)
+				obj.Size = UDim2.new(MapSize.X / explorerIcons.IconSize, 0, MapSize.Y / explorerIcons.IconSize, 0)
 			end
 			
 		end
@@ -5385,7 +5488,6 @@ local function main()
 
 				local obj = Instance.new("ImageLabel", Frame)
 				obj.BackgroundTransparency = 1
-				obj.Image = ("http://www.roblox.com/asset/?id=" .. (self.ExplorerIcons.MapId))
 				obj.Name = "IconMap"
 				self:GetExplorerIcon(obj, index)
 			end
@@ -5425,7 +5527,7 @@ local function main()
 			return IconList[name] or error("Name not found")
 		end
 
-		return {new = new, newLinear = newLinear, getIconDataFromName = getIconDataFromName}
+		return {new = new, newLinear = newLinear, getIconDataFromName = getIconDataFromName, setExplorerIconStyle = funcs.SetExplorerIconStyle}
 	end)()
 
 	Lib.ScrollBar = (function()
@@ -7265,7 +7367,8 @@ local function main()
 			[14] = "Local",
 			[15] = "Self",
 			[16] = "FunctionName",
-			[17] = "Bracket"
+			[17] = "Bracket",
+			[18] = "String"
 		}
 
 		local specialKeywordsTypes = {
@@ -8166,6 +8269,7 @@ local function main()
 			findAll(text,"'",2,true)
 			findAll(text,"%[(=*)%[",3)
 			findAll(text,"--",4,true)
+			findAll(text,"`",18,true)
 			table.sort(found)
 
 			local newLines = self.NewLines
@@ -8206,6 +8310,12 @@ local function main()
 					else
 						ending = find(text,"\n",pos+1,true) or textLen
 					end
+				elseif typ == 18 then
+					ending = find(text,"`",pos+1,true)
+					while ending and sub(text,ending-1,ending-1) == "\\" do
+						ending = find(text,"`",ending+1,true)
+					end
+					if not ending then ending = textLen end
 				end
 
 				while pos > lineEnd do
@@ -14208,7 +14318,7 @@ local function main()
 		
 		local classIcon = AddDropdown("Class Icons", {"Old", "NewDark", "Vanilla3"}, Settings.ClassIcon, false, 100)
 		classIcon.OnSelect:Connect(function()
-			Settings.ClassIcon = classIcon.Selected
+			Explorer.SetClassIcon(classIcon.Selected)
 		end)
 		
 		AddSeperator("Explorer")
@@ -14259,6 +14369,12 @@ local function main()
 			Settings.ScriptViewer.ShowMoreInfo = showMoreInfo.Toggled
 		end)
 		
+		AddSeperator("API")
+		local apiSource = AddDropdown("API Dump Source", {"Roblox", "RCT", "Cache"}, Settings.API.Source, false, 125)
+		apiSource.OnSelect:Connect(function()
+			Settings.API.Source = apiSource.Selected
+		end)
+
 		AddSeperator("Decompiler")
 		local decompilerOption = {"luaexpert","luacid","x2125","sabre"}
 		local decompiler = AddDropdown("Decompiler Fallback", decompilerOption, Settings.Decompiler.DecompilerFallback, false, 125)
@@ -14360,7 +14476,7 @@ DefaultSettings = (function()
 		Properties = {
 			_Recurse = true,
 			MaxConflictCheck = 50,
-			ShowDeprecated = true,
+			ShowDeprecated = false,
 			ShowHidden = false,
 			LoadstringInput = true,
 			NumberRounding = 3,
@@ -14430,9 +14546,11 @@ DefaultSettings = (function()
 			PreferDecompilerFallback = false,
 			StripDecompilerHeader = true
 		},
-		
+		API = {
+			Source = "RCT"
+		},
 		RemoteBlockWriteAttribute = false, -- writes attribute to remote instance if remote is blocked/unblocked
-		ClassIcon = "NewDark",
+		ClassIcon = "Old",
 		
 		-- What available icons:
 		-- > Vanilla3
@@ -14523,71 +14641,6 @@ Main = (function()
 		end
 	end
 	
-	--[[Main.LoadAdonisBypass = function()
-		-- skidded off reddit :pensive:
-		local getinfo = getinfo or debug.getinfo
-		local DEBUG = false
-		local Hooked = {}
-
-		local Detected, Kill
-
-		setthreadidentity(2)
-
-		for i, v in getgc(true) do
-			if typeof(v) == "table" then
-				local DetectFunc = rawget(v, "Detected")
-				local KillFunc = rawget(v, "Kill")
-
-				if typeof(DetectFunc) == "function" and not Detected then
-					Detected = DetectFunc
-
-					local Old; Old = hookfunction(Detected, function(Action, Info, NoCrash)
-						if Action ~= "_" then
-							if DEBUG then
-								warn(`Adonis AntiCheat flagged\nMethod: {Action}\nInfo: {Info}`)
-							end
-						end
-
-						return true
-					end)
-
-					table.insert(Hooked, Detected)
-				end
-
-				if rawget(v, "Variables") and rawget(v, "Process") and typeof(KillFunc) == "function" and not Kill then
-					Kill = KillFunc
-					local Old; Old = hookfunction(Kill, function(Info)
-						if DEBUG then
-							warn(`Adonis AntiCheat tried to kill (fallback): {Info}`)
-						end
-					end)
-
-					table.insert(Hooked, Kill)
-				end
-			end
-		end
-
-		local Old; Old = hookfunction(getrenv().debug.info, newcclosure(function(...)
-			local LevelOrFunc, Info = ...
-
-			if Detected and LevelOrFunc == Detected then
-				if DEBUG then
-					warn(`Adonis AntiCheat sanity check detected and broken`)
-				end
-
-				return coroutine.yield(coroutine.running())
-			end
-
-			return Old(...)
-		end))
-		-- setthreadidentity(9)
-		setthreadidentity(7)
-	end
-	
-	Main.LoadGCBypass = function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/secretisadev/Babyhamsta_Backup/refs/heads/main/Universal/Bypasses.lua", true))()
-	end]]
-	
 	Main.GetRandomString = function()
 		local output = ""
 		for i = 2, 25 do
@@ -14598,10 +14651,7 @@ Main = (function()
 	end
 	
 	Main.GetSecureContainer = function()
-		return
-			gethui and gethui() or
-			service.CoreGui or
-			service.Players.LocalPlayer:WaitForChild("PlayerGui")
+		return gethui and gethui() or service.CoreGui or service.Players.LocalPlayer:WaitForChild("PlayerGui")
 	end
 	
 	Main.SecureGui = function(gui)
@@ -14651,69 +14701,18 @@ Main = (function()
 	end
 
 	Main.LoadModule = function(name)
-		if Main.Elevated then -- If you don't have filesystem api then ur outta luck tbh
-			local control
-
-			if EmbeddedModules then -- Offline Modules
-				control = EmbeddedModules[name]()
-
-				-- TODO: Remove when open source
-				if gethsfuncs then
-					control = _G.moduleData
-				end
-
-				if not control then Main.Error("Missing Embedded Module: "..name) end
-			else
-				-- Get hash data
-				local hashs = Main.ModuleHashData
-				if not hashs then
-					local s,hashDataStr = pcall(oldgame.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/ModuleHashs.dat")
-					if not s then Main.Error("Failed to get module hashs") end
-
-					local s,hashData = pcall(service.HttpService.JSONDecode,service.HttpService,hashDataStr)
-					if not s then Main.Error("Failed to decode module hash JSON") end
-
-					hashs = hashData
-					Main.ModuleHashData = hashs
-				end
-
-				-- Check if local copy exists with matching hashs
-				local hashfunc = (syn and syn.crypt.hash) or function() return "" end
-				local filePath = "dex/ModuleCache/"..name..".lua"
-				local s,moduleStr = pcall(env.readfile,filePath)
-
-				if s and hashfunc(moduleStr) == hashs[name] then
-					control = loadstring(moduleStr)()
-				else
-					-- Download and cache
-					local s,moduleStr = pcall(oldgame.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/Modules/"..name..".lua")
-					if not s then Main.Error("Failed to get external module data of "..name) end
-
-					env.writefile(filePath,moduleStr)
-					control = loadstring(moduleStr)()
-				end
-			end
-
-			Main.AppControls[name] = control
-			control.InitDeps(Main.GetInitDeps())
-
-			local moduleData = control.Main()
-			Apps[name] = moduleData
-			return moduleData
-		else
-			local module = script:WaitForChild("Modules"):WaitForChild(name,2)
-			if not module then Main.Error("CANNOT FIND MODULE "..name) end
-
-			local control = require(module)
-			Main.AppControls[name] = control
-			control.InitDeps(Main.GetInitDeps())
-
-			local moduleData = control.Main()
-			Apps[name] = moduleData
-			return moduleData
+        local control
+		if EmbeddedModules then
+			control = EmbeddedModules[name]()
+			if not control then Main.Error("Missing Embedded Module: "..name) end
 		end
+		Main.AppControls[name] = control
+		control.InitDeps(Main.GetInitDeps())
+		local moduleData = control.Main()
+		Apps[name] = moduleData
+		return moduleData
 	end
-	
+
 	Main.LoadPluginFile = function(pluginDir)
 		if env.readfile then
 			if isfile(pluginDir) then
@@ -15023,10 +15022,7 @@ Main = (function()
 			Main.ResetSettings()
 		end
 	end
-
 	
-	
-
 	Main.ResetSettings = function()
 		local function recur(t,res)
 			for set,val in pairs(t) do
@@ -15209,58 +15205,67 @@ Main = (function()
 				if not downloaded and XD then XD() end
 			end)
 
-			if Main.RobloxVersion then
-				local requestSuccess,downloadedAPI = pcall(function()
-					return game:HttpGet("http://setup.roblox.com/"..Main.RobloxVersion.."-API-Dump.json")
-				end)
-				if requestSuccess then
-					local downloadedData,decodeError = decodeAPIDump(downloadedAPI)
-					if downloadedData then
-						rawAPI = downloadedAPI
-						api = downloadedData
-					else
-						warn("AlwaysDex: setup.roblox.com API dump is invalid: "..tostring(decodeError))
-					end
-				else
-					warn("AlwaysDex: Failed to download API dump from setup.roblox.com: "..tostring(downloadedAPI))
-				end
-			else
-				warn("AlwaysDex: Skipping setup.roblox.com because the Roblox client version is unavailable")
+			local selectedSource = Settings.API and Settings.API.Source
+			if selectedSource ~= "RCT" and selectedSource ~= "Roblox" and selectedSource ~= "Cache" then
+				selectedSource = "Roblox"
 			end
-
-			if not api then
-				local requestSuccess,downloadedAPI = pcall(function()
-					return game:HttpGet("https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/Full-API-Dump.json")
-				end)
-				if requestSuccess then
-					local downloadedData,decodeError = decodeAPIDump(downloadedAPI)
-					if downloadedData then
-						rawAPI = downloadedAPI
-						api = downloadedData
-					else
-						warn("AlwaysDex: GitHub API dump is invalid: "..tostring(decodeError))
-					end
-				else
-					warn("AlwaysDex: Failed to download API dump from GitHub: "..tostring(downloadedAPI))
+			local sourceOrder = {selectedSource}
+			for _,source in ipairs({"Roblox","RCT","Cache"}) do
+				if source ~= selectedSource then
+					sourceOrder[#sourceOrder+1] = source
 				end
 			end
 
-			if not api then
-				for _,cachedAPI in ipairs(cachedAPIs) do
-					local cachedData,cachedError = decodeAPIDump(cachedAPI)
-					if cachedData then
-						rawAPI = cachedAPI
-						api = cachedData
-						Main.APIFromCache = true
-						break
+			for _,source in ipairs(sourceOrder) do
+				if source == "Cache" then
+					for _,cachedAPI in ipairs(cachedAPIs) do
+						local cachedData,cachedError = decodeAPIDump(cachedAPI)
+						if cachedData then
+							rawAPI = cachedAPI
+							api = cachedData
+							Main.APIFromCache = true
+							break
+						else
+							warn("AlwaysDex: Cached Roblox API dump is invalid: "..tostring(cachedError))
+						end
+					end
+				else
+					local url
+					if source == "Roblox" then
+						if Main.RobloxVersion then
+							url = "http://setup.roblox.com/"..Main.RobloxVersion.."-API-Dump.json"
+						else
+							warn("AlwaysDex: Skipping setup.roblox.com because the Roblox client version is unavailable")
+						end
 					else
-						warn("AlwaysDex: Cached Roblox API dump is invalid: "..tostring(cachedError))
+						url = "https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/Full-API-Dump.json"
+					end
+
+					if url then
+						local requestSuccess,downloadedAPI = pcall(function()
+							return game:HttpGet(url)
+						end)
+						if requestSuccess then
+							local downloadedData,decodeError = decodeAPIDump(downloadedAPI)
+							if downloadedData then
+								rawAPI = downloadedAPI
+								api = downloadedData
+								Main.APIFromCache = false
+							else
+								warn("AlwaysDex: "..source.." API dump is invalid: "..tostring(decodeError))
+							end
+						else
+							warn("AlwaysDex: Failed to download API dump from "..source..": "..tostring(downloadedAPI))
+						end
 					end
 				end
+
+				if api then break end
 			end
 		else
 			if script:FindFirstChild("API") then
 				rawAPI = require(script.API)
+				api = decodeAPIDump(rawAPI)
 			end
 		end
 		
@@ -15589,7 +15594,7 @@ Main = (function()
 			{3,"Frame",{BackgroundColor3=Color3.new(0.17647059261799,0.17647059261799,0.17647059261799),BorderSizePixel=0,ClipsDescendants=true,Name="Holder",Parent={2},Size=UDim2.new(1,0,1,0),}},
 			{4,"UIGradient",{Parent={3},Rotation=30,Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1,0),NumberSequenceKeypoint.new(1,1,0),}),}},
 			{5,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=4,Name="Title",Parent={3},Position=UDim2.new(0,-190,0,15),Size=UDim2.new(0,100,0,50),Text="Dex",TextColor3=Color3.new(1,1,1),TextSize=50,TextTransparency=1,}},
-			{6,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Desc",Parent={3},Position=UDim2.new(0,-230,0,60),Size=UDim2.new(0,180,0,25),Text="Ultimate Debugging Suite",TextColor3=Color3.new(1,1,1),TextSize=18,TextTransparency=1,}},
+			{6,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Desc",Parent={3},Position=UDim2.new(0,-230,0,60),Size=UDim2.new(0,180,0,25),Text="Debugging Suite",TextColor3=Color3.new(1,1,1),TextSize=18,TextTransparency=1,}},
 			{7,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="StatusText",Parent={3},Position=UDim2.new(0,20,0,110),Size=UDim2.new(0,180,0,25),Text="Fetching API",TextColor3=Color3.new(1,1,1),TextSize=14,TextTransparency=1,}},
 			{8,"Frame",{BackgroundColor3=Color3.new(0.20392157137394,0.20392157137394,0.20392157137394),BorderSizePixel=0,Name="ProgressBar",Parent={3},Position=UDim2.new(0,110,0,145),Size=UDim2.new(0,0,0,4),}},
 			{9,"Frame",{BackgroundColor3=Color3.new(0.2392156869173,0.56078433990479,0.86274510622025),BorderSizePixel=0,Name="Bar",Parent={8},Size=UDim2.new(0,0,1,0),}},
@@ -15744,17 +15749,20 @@ Main = (function()
 		local app = Main.AppTemplate:Clone()
 
 		local iconIndex = data.Icon
-		if data.IconMap and iconIndex then
-			if type(iconIndex) == "number" then
-				data.IconMap:Display(app.Main.Icon,iconIndex)
+		local function refreshIcon()
+			if data.IconMap and iconIndex then
+				if type(iconIndex) == "number" then
+					data.IconMap:Display(app.Main.Icon,iconIndex)
+				elseif type(iconIndex) == "string" then
+					data.IconMap:DisplayByKey(app.Main.Icon,iconIndex)
+				end
 			elseif type(iconIndex) == "string" then
-				data.IconMap:DisplayByKey(app.Main.Icon,iconIndex)
+				app.Main.Icon.Image = iconIndex
+			else
+				app.Main.Icon.Image = ""
 			end
-		elseif type(iconIndex) == "string" then
-			app.Main.Icon.Image = iconIndex
-		else
-			app.Main.Icon.Image = ""
 		end
+		refreshIcon()
 
 		local function updateState()
 			app.Main.BackgroundTransparency = data.Open and 0 or (Lib.CheckMouseInGui(app.Main) and 0 or 1)
@@ -15818,6 +15826,7 @@ Main = (function()
 
 		control.Enable = enable
 		control.Disable = disable
+		control.RefreshIcon = refreshIcon
 		Main.MenuApps[data.Name] = control
 		return control
 	end
@@ -16025,7 +16034,7 @@ Main = (function()
 		Main.CreateApp({Name = "Properties", IconMap = Main.LargeIcons, Icon = "Properties", Open = true, Window = Properties.Window})
 
 		local cptsOnMouseClick = nil
-		Main.CreateApp({Name = "Click part to select", IconMap = Explorer.ClassIcons, Icon = "SelectionBox", OnClick = function(callback)
+		Main.CreateApp({Name = "Click part to select", IconMap = Explorer.ActionIcons, Icon = "SelectionBox", OnClick = function(callback)
 			if callback then
 				local mouse = Main.Mouse
 				cptsOnMouseClick = Main.TrackConnection(mouse.Button1Down:Connect(function()
@@ -16094,7 +16103,6 @@ Main = (function()
 		"luvlies.png", "minimize2.png", "refresh-icon3.png", "search2.png", "settings.png",
 		"settings2.png", "sprite_sheet (1).png", "squares_icon2.png"
 	}
-
 	Main.GetAssetId = function(fileName, fallback)
 		if not Settings.Assets.UseGetCustomAsset or not getcustomasset or not env.isfile then
 			return fallback
@@ -16135,7 +16143,7 @@ Main = (function()
 
 		-- Init icons
 		if Settings.Assets.UseGetCustomAsset then
-			if Main.Elevated and getcustomasset and env.writefile and env.makefolder and env.isfile and env.isfolder then
+			if getcustomasset and env.writefile and env.makefolder and env.isfile and env.isfolder then
 				local folderReady, folderError = pcall(function()
 					if not env.isfolder("adex") then env.makefolder("adex") end
 					if not env.isfolder("adex/images") then env.makefolder("adex/images") end
@@ -16176,7 +16184,7 @@ Main = (function()
 			elseif not getcustomasset then
 				warn("AlwaysDex: Custom assets are enabled, but getcustomasset is unavailable")
 			else
-				warn("AlwaysDex: Custom assets are enabled, but filesystem APIs or CoreGui access are unavailable")
+				warn("AlwaysDex: Custom assets are enabled, but filesystem APIs are unavailable")
 			end
 		end
 
